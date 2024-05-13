@@ -1,8 +1,13 @@
 import React from 'react'
+import CellularAutomatonSimCanvas from '../../Components';
+import './RuleEditor.css';
 
 function RuleEditor() {
   return (
-    <div>RuleEditor</div>
+    <div id='RuleEditor'>
+      <div>RuleEditor</div>
+      <CellularAutomatonSimCanvas />
+    </div>
   )
 }
 
