@@ -1,7 +1,8 @@
 import { useRef, useEffect, useState } from 'react';
 import './CellularAutomatonSimCanvas.css';
+import applyRulesToMap from '../SimulationLogic/CellularAutomatonSimLogic';
 
-function CellularAutomatonSimCanvas() {
+function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet }) {
 
   const [config, setConfig] = useState({
     win: {
@@ -31,34 +32,19 @@ function CellularAutomatonSimCanvas() {
       }
     },
     viewport: {x: 0, y: 0, moving: false},
-    tileSize: 64
+    tileSize: 30,
+    map: createEmptyMap(110, 180),
+    previousMapCalcTime: Date.now(),
+    timeBetweenMapCalc: 300,
+    isSimStopped: true,
+    activeRuleSet: undefined
   });
-
-  const [map, setMap] = useState(
-    [
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-      [1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-    ]
-  );
 
   const canvasRef = useRef(null)
   
   useEffect(() => {
-    
+    config.activeRuleSet = activeRuleSet;
+
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     let animationFrameId;
@@ -66,20 +52,22 @@ function CellularAutomatonSimCanvas() {
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
 
-    console.log(`context.canvas.clientHeight: ${context.canvas.clientHeight}`);
-    console.log(`context.canvas.clientWidth: ${context.canvas.clientWidth}`);
-
     function handleCellClickEvent(e) {
         handleCellClick(canvas, e);
     }
     
-    document.addEventListener('mousedown', handleCellClickEvent);
+    canvas.addEventListener('mousedown', handleCellClickEvent);
     window.addEventListener('resize', onWindowResize);
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
     document.addEventListener('wheel', handleMouseWheel);
     
     const render = () => {
+      if (!config.isSimStopped && (Date.now() - config.previousMapCalcTime) > config.timeBetweenMapCalc) {
+        config.map = applyRulesToMap(config.activeRuleSet, config.map);
+        config.previousMapCalcTime = Date.now();
+      }
+
       draw(context);
       animationFrameId = window.requestAnimationFrame(render);
     }
@@ -88,7 +76,7 @@ function CellularAutomatonSimCanvas() {
     
     return () => {
       window.cancelAnimationFrame(animationFrameId);
-      document.removeEventListener('mousedown', handleCellClickEvent);
+      canvas.removeEventListener('mousedown', handleCellClickEvent);
       window.removeEventListener('resize', onWindowResize);
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('keyup', handleKeyUp);
@@ -96,30 +84,41 @@ function CellularAutomatonSimCanvas() {
     }
   }, [])
 
+  useEffect(() => {
+    config.isSimStopped = isSimulationStopped;
+  }, [isSimulationStopped])
+
+  useEffect(() => {
+    config.activeRuleSet = activeRuleSet;
+  }, [activeRuleSet])
+  
+
+  function createEmptyMap(numberOfRows, numberOfColumns) {
+    const map = [];
+
+    for (let row = 0; row < numberOfRows; row++) {
+      const rowArr = [];
+      map.push(rowArr);
+      for (let col = 0; col < numberOfColumns; col++) {
+        rowArr.push(0);
+      }
+    }
+
+    return map;
+  }
+
   function drawMap(ctx) {
     let x_min = Math.floor(config.viewport.x / config.tileSize);
     let y_min = Math.floor(config.viewport.y / config.tileSize);
     let x_max = Math.ceil((config.viewport.x + ctx.canvas.clientWidth) / config.tileSize);
     let y_max = Math.ceil((config.viewport.y + ctx.canvas.clientHeight) / config.tileSize);
 
-/*
-    for (let y = 0; y < map.length; y++) {
-      for (let x = 0; x < map[y].length; x++) {
-        let tileX = x * config.tileSize - config.viewport.x;
-        let tileY = y * config.tileSize - config.viewport.y;
-        if (map[y][x] === 1) {
-          ctx.fillStyle = '#AFE1AF';
-          ctx.fillRect(tileX, tileY, config.tileSize - 1, config.tileSize - 1);
-        }
-      }
-    }
-*/
     for (let y = y_min; y < y_max; y++) {
       for (let x = x_min; x < x_max; x++) {
         let tileX = x * config.tileSize - config.viewport.x;
         let tileY = y * config.tileSize - config.viewport.y;
-        if (y >= 0 && x >= 0 && y < map.length && x < map[0].length && map[y][x] === 1) {
-          ctx.fillStyle = '#AFE1AF';
+        if (y >= 0 && x >= 0 && y < config.map.length && x < config.map[0].length) {
+          ctx.fillStyle = config.activeRuleSet.cellTypes.find((cellType) => cellType.id === config.map[y][x]).cellColor;
           ctx.fillRect(tileX, tileY, config.tileSize - 1, config.tileSize - 1);
         }
       }
@@ -150,7 +149,7 @@ function CellularAutomatonSimCanvas() {
   }
 
   /*
-  //old way
+  //ask a mentor about this
   function resizeCanvasToDisplaySize(canvas) {
     //const { width, height } = canvas.getBoundingClientRect();
     const width  = canvas.clientWidth;
@@ -212,29 +211,21 @@ function CellularAutomatonSimCanvas() {
 
   function handleCellClick(canvas, event) {
     event.preventDefault();
+
     let rect = canvas.getBoundingClientRect();
     let x = event.clientX - rect.left;
     let y = event.clientY - rect.top;
-    console.log(`x: ${x} y: ${y}`);
     let mapX = Math.floor((x + config.viewport.x) / config.tileSize);
     let mapY = Math.floor((y + config.viewport.y) / config.tileSize);
 
-    console.log(`mapX: ${mapX} mapY: ${mapY} value: ${map[mapY][mapX]}`);
-
-    if (map[mapY][mapX] === 0) {
-      map[mapY][mapX] = 1;
+    if (config.map[mapY][mapX] === 0) {
+      config.map[mapY][mapX] = 1;
     } else {
-      map[mapY][mapX] = 0;
+      config.map[mapY][mapX] = 0;
     }
-    
-    console.log(`mapX: ${mapX} mapY: ${mapY} value: ${map[mapY][mapX]}`);
-    //map[mapY][mapX] = 666;
-    console.log(map)
   }
 
   function handleMouseWheel(event) {
-    //event.preventDefault();
-
     if (event.deltaY > 0) {
       config.tileSize--;
     }
