@@ -6,6 +6,8 @@ import { gameOfLifeRuleset, rule30Ruleset } from '../../SimulationLogic/PremadeR
 function RuleEditor() {
   const [isSimulationStopped, setIsSimulationStopped] = useState(true);
   const [activeRuleSet, setActiveRuleSet] = useState(gameOfLifeRuleset);
+  const [rulesetDetailsOpen, setRulesetDetailsOpen] = useState(false);
+  const [chosenRule, setChosenRule] = useState(gameOfLifeRuleset.rules[0]);
 
   function stopOrStartSimulation(event) {
     if (isSimulationStopped) {
@@ -23,20 +25,64 @@ function RuleEditor() {
     }
   }
 
+  function handleDetailsToggle(event) {
+    if (rulesetDetailsOpen) {
+      setRulesetDetailsOpen(false);
+    } else {
+      setRulesetDetailsOpen(true);
+    }
+  }
+
+  function handleClickDropdownElemRuleset(event, ruleset) {
+    event.preventDefault();
+    setActiveRuleSet(ruleset);
+    setChosenRule(ruleset.rules[0]);
+  }
+
+  function handleClickDropdownElemRule(event, rule) {
+    //event.preventDefault();
+    setChosenRule(rule);
+  }
+
   return (
     <div id='RuleEditor'>
-      <div>RuleEditor</div>
-      <details>
+      <details className='RuleEditorDetails' onToggle={(e) => handleDetailsToggle(e)}>
       <summary>
-          Vmi
+          Choose ruleset: 
+          <div className="dropdown">
+            <button className="dropbtn">{activeRuleSet.ruleSetName}</button>
+            <div className="dropdown-content">
+              <div className='DropdownElement' onClick={(e) => handleClickDropdownElemRuleset(e, gameOfLifeRuleset)} >Game Of Life</div>
+              <div className='DropdownElement' onClick={(e) => handleClickDropdownElemRuleset(e, rule30Ruleset)}>Rule 30</div>
+            </div>
+          </div>
       </summary>
-      <p>sdsddasd</p>
-      <p>sdsddasd</p>
-      <p>sdsddasd</p>
+      <>
+      {activeRuleSet.cellTypes.map((cellType, i) =>
+        <div key={i} className='CellTypeSummaryElement'>{cellType.cellType}</div>
+      )}
+      </>
+      </details>
+      <details className='RuleEditorDetails' onToggle={(e) => handleDetailsToggle(e)}>
+      <summary>
+          Choose rule: 
+          <div className="dropdown">
+            <button className="dropbtn">{chosenRule.ruleName}</button>
+            <div className="dropdown-content">
+              {activeRuleSet.rules.map((rule, i) =>
+                <div key={i} className='DropdownElement'>{rule.ruleName}</div>
+              )}
+            </div>
+          </div>
+      </summary>
+      <>
+      {chosenRule.patterns[0].coordsRelativeToCell.map((coord, i) =>
+        <div key={i}>r: {coord.r}, c: {coord.c}</div>
+      )}
+      </>
       </details>
       <button onClick={(e) => stopOrStartSimulation(e)}>{isSimulationStopped ? 'Start' : 'Stop'}</button>
-      <button onClick={(e) => changeRuleSet(e)}>Active rule set: {activeRuleSet === gameOfLifeRuleset ? 'Game Of Life' : 'Rule 30'}</button>
-      <CellularAutomatonSimCanvas isSimulationStopped={isSimulationStopped} activeRuleSet={activeRuleSet} />
+      <CellularAutomatonSimCanvas isSimulationStopped={isSimulationStopped} activeRuleSet={activeRuleSet} rulesetDetailsOpen={rulesetDetailsOpen} />
     </div>
   )
 }
