@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import CellularAutomatonSimCanvas from '../../Components';
 import './RuleEditor.css';
-import { gameOfLifeRuleSet, rule30RuleSet } from '../../SimulationLogic/PremadeRuleSets';
+import { gameOfLifeRuleset, rule30Ruleset } from '../../SimulationLogic/PremadeRulesets';
 
 function RuleEditor() {
   const [isSimulationStopped, setIsSimulationStopped] = useState(true);
-  const [activeRuleSet, setActiveRuleSet] = useState(gameOfLifeRuleSet);
+  const [activeRuleSet, setActiveRuleSet] = useState(gameOfLifeRuleset);
 
   function stopOrStartSimulation(event) {
     if (isSimulationStopped) {
@@ -16,10 +16,10 @@ function RuleEditor() {
   }
 
   function changeRuleSet(event) {
-    if (activeRuleSet === gameOfLifeRuleSet) {
-      setActiveRuleSet(rule30RuleSet);
+    if (activeRuleSet === gameOfLifeRuleset) {
+      setActiveRuleSet(rule30Ruleset);
     } else {
-      setActiveRuleSet(gameOfLifeRuleSet);
+      setActiveRuleSet(gameOfLifeRuleset);
     }
   }
 
@@ -27,15 +27,15 @@ function RuleEditor() {
     <div id='RuleEditor'>
       <div>RuleEditor</div>
       <details>
-        <summary>
+      <summary>
           Vmi
-        </summary>
-        <p>sdsddasd</p>
-        <p>sdsddasd</p>
-        <p>sdsddasd</p>
+      </summary>
+      <p>sdsddasd</p>
+      <p>sdsddasd</p>
+      <p>sdsddasd</p>
       </details>
       <button onClick={(e) => stopOrStartSimulation(e)}>{isSimulationStopped ? 'Start' : 'Stop'}</button>
-      <button onClick={(e) => changeRuleSet(e)}>Active rule set: {activeRuleSet === gameOfLifeRuleSet ? 'Game Of Life' : 'Rule 30'}</button>
+      <button onClick={(e) => changeRuleSet(e)}>Active rule set: {activeRuleSet === gameOfLifeRuleset ? 'Game Of Life' : 'Rule 30'}</button>
       <CellularAutomatonSimCanvas isSimulationStopped={isSimulationStopped} activeRuleSet={activeRuleSet} />
     </div>
   )

@@ -1,4 +1,4 @@
-const gameOfLifeRuleSet = {
+const gameOfLifeRuleset = {
   ruleSetName: 'Game Of Life',
   cellTypes: [
     {
@@ -108,7 +108,7 @@ const gameOfLifeRuleSet = {
   ]
 }
 
-const rule30RuleSet = {
+const rule30Ruleset = {
   ruleSetName: 'Game Of Life',
   cellTypes: [
     {
@@ -243,4 +243,4 @@ const rule30RuleSet = {
   ]
 }
 
-export { gameOfLifeRuleSet, rule30RuleSet };
+export { gameOfLifeRuleset, rule30Ruleset };
