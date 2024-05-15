@@ -26,6 +26,14 @@ function RuleEditor() {
   return (
     <div id='RuleEditor'>
       <div>RuleEditor</div>
+      <details>
+        <summary>
+          Vmi
+        </summary>
+        <p>sdsddasd</p>
+        <p>sdsddasd</p>
+        <p>sdsddasd</p>
+      </details>
       <button onClick={(e) => stopOrStartSimulation(e)}>{isSimulationStopped ? 'Start' : 'Stop'}</button>
       <button onClick={(e) => changeRuleSet(e)}>Active rule set: {activeRuleSet === gameOfLifeRuleSet ? 'Game Of Life' : 'Rule 30'}</button>
       <CellularAutomatonSimCanvas isSimulationStopped={isSimulationStopped} activeRuleSet={activeRuleSet} />

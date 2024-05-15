@@ -33,7 +33,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet }) {
     },
     viewport: {x: 0, y: 0, moving: false},
     tileSize: 30,
-    map: createEmptyMap(110, 180),
+    map: createEmptyMap(90, 140),
     previousMapCalcTime: Date.now(),
     timeBetweenMapCalc: 300,
     isSimStopped: true,
@@ -131,6 +131,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet }) {
     if (config.viewport.moving = true) {
       moveViewport();
     }
+
     drawMap(ctx);
   }
 
@@ -185,6 +186,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet }) {
 
   function handleKeyDown(event) {
     event.preventDefault();
+
     if (event.keyCode >= 37 && event.keyCode <= 40) {
       config.viewport.moving = true;
 
@@ -198,6 +200,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet }) {
 
   function handleKeyUp(event) {
     event.preventDefault();
+
     if (event.keyCode >= 37 && event.keyCode <= 40) {
       config.viewport.moving = false;
 
@@ -218,10 +221,12 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet }) {
     let mapX = Math.floor((x + config.viewport.x) / config.tileSize);
     let mapY = Math.floor((y + config.viewport.y) / config.tileSize);
 
-    if (config.map[mapY][mapX] === 0) {
-      config.map[mapY][mapX] = 1;
-    } else {
-      config.map[mapY][mapX] = 0;
+    if (mapX >= 0 && mapX < config.map[0].length && mapY >= 0 && mapY < config.map.length) {
+      if (config.map[mapY][mapX] === 0) {
+        config.map[mapY][mapX] = 1;
+      } else {
+        config.map[mapY][mapX] = 0;
+      }
     }
   }
 
