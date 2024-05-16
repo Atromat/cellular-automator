@@ -8,6 +8,7 @@ function RuleEditor() {
   const [activeRuleSet, setActiveRuleSet] = useState(gameOfLifeRuleset);
   const [detailsToggled, setDetailsToggled] = useState(0);
   const [chosenRule, setChosenRule] = useState(gameOfLifeRuleset.rules[0]);
+  const [resetClicked, setResetClicked] = useState(0)
 
   function stopOrStartSimulation(event) {
     if (isSimulationStopped) {
@@ -19,6 +20,10 @@ function RuleEditor() {
 
   function handleDetailsToggle(event) {
     setDetailsToggled(detailsToggled + 1);
+  }
+
+  function handleResetClick(event) {
+    setResetClicked(resetClicked + 1);
   }
 
   function handleClickDropdownElemRuleset(event, ruleset) {
@@ -71,9 +76,9 @@ function RuleEditor() {
       </details>
       <div id='SimulationControllButtonsContainer'>
         <button onClick={(e) => stopOrStartSimulation(e)}>{isSimulationStopped ? 'Start' : 'Stop'}</button>
-        <></>
+        <button onClick={(e) => handleResetClick(e)}>Reset</button>
       </div>
-      <CellularAutomatonSimCanvas isSimulationStopped={isSimulationStopped} activeRuleSet={activeRuleSet} detailsToggled={detailsToggled} />
+      <CellularAutomatonSimCanvas isSimulationStopped={isSimulationStopped} activeRuleSet={activeRuleSet} detailsToggled={detailsToggled} resetClicked={resetClicked} />
     </div>
   )
 }

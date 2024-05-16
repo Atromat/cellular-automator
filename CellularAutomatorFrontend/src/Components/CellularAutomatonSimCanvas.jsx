@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import './CellularAutomatonSimCanvas.css';
 import applyRulesToMap from '../SimulationLogic/CellularAutomatonSimLogic';
 
-function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, detailsToggled }) {
+function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, detailsToggled, resetClicked }) {
 
   const [config, setConfig] = useState({
     win: {
@@ -91,7 +91,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, detail
   useEffect(() => {
     config.activeRuleSet = activeRuleSet;
     resetMap();
-  }, [activeRuleSet])
+  }, [activeRuleSet, resetClicked])
 
   useEffect(() => {
       onWindowResize();
