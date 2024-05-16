@@ -109,7 +109,7 @@ const gameOfLifeRuleset = {
 }
 
 const rule30Ruleset = {
-  ruleSetName: 'Game Of Life',
+  ruleSetName: 'Rule 30',
   cellTypes: [
     {
       id: 0,
