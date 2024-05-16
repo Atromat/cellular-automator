@@ -6,7 +6,7 @@ import { gameOfLifeRuleset, rule30Ruleset } from '../../SimulationLogic/PremadeR
 function RuleEditor() {
   const [isSimulationStopped, setIsSimulationStopped] = useState(true);
   const [activeRuleSet, setActiveRuleSet] = useState(gameOfLifeRuleset);
-  const [detailsToggled, setDetailsToggled] = useState(0);
+  const [heightChanged, setHeightChanged] = useState(0);
   const [chosenRule, setChosenRule] = useState(gameOfLifeRuleset.rules[0]);
   const [resetClicked, setResetClicked] = useState(0);
   const [timeBetweenCalculatingMapTurns, setTimeBetweenCalculatingMapTurns] = useState(400);
@@ -21,8 +21,8 @@ function RuleEditor() {
     }
   }
 
-  function handleDetailsToggle(event) {
-    setDetailsToggled(detailsToggled + 1);
+  function handleHightChangeOfElements(event) {
+    setHeightChanged(heightChanged + 1);
   }
 
   function handleResetClick(event) {
@@ -31,12 +31,14 @@ function RuleEditor() {
 
   function handleClickDropdownElemRuleset(event, ruleset) {
     event.preventDefault();
+    handleHightChangeOfElements();
     setActiveRuleSet(ruleset);
     setChosenRule(ruleset.rules[0]);
   }
 
   function handleClickDropdownElemRule(event, rule) {
-    //event.preventDefault();
+    event.preventDefault();
+    handleHightChangeOfElements();
     setChosenRule(rule);
   }
 
@@ -49,7 +51,7 @@ function RuleEditor() {
 
   return (
     <div id='RuleEditor'>
-      <details id='RulesetDetails' className='RuleEditorDetails' onToggle={(e) => handleDetailsToggle(e)}>
+      <details id='RulesetDetails' className='RuleEditorDetails' onToggle={(e) => handleHightChangeOfElements(e)}>
       <summary>
           Choose ruleset: 
           <div className="dropdown">
@@ -65,14 +67,14 @@ function RuleEditor() {
         <div key={i} className='CellTypeSummaryElement'>{cellType.cellType}</div>
       )}
       </>
-      <details id='RuleDetails' className='RuleEditorDetails' onToggle={(e) => handleDetailsToggle(e)}>
+      <details id='RuleDetails' className='RuleEditorDetails' onToggle={(e) => handleHightChangeOfElements(e)}>
       <summary>
           Choose rule: 
           <div className="dropdown">
             <button className="dropbtn">{chosenRule.ruleName}</button>
             <div className="dropdown-content">
               {activeRuleSet.rules.map((rule, i) =>
-                <div key={i} className='DropdownElement'>{rule.ruleName}</div>
+                <div key={i} className='DropdownElement' onClick={(e) => handleClickDropdownElemRule(e, rule)}>{rule.ruleName}</div>
               )}
             </div>
           </div>
@@ -98,7 +100,7 @@ function RuleEditor() {
       <CellularAutomatonSimCanvas 
         isSimulationStopped={isSimulationStopped} 
         activeRuleSet={activeRuleSet} 
-        detailsToggled={detailsToggled} 
+        heightChanged={heightChanged}
         resetClicked={resetClicked}
         timeBetweenCalculatingMapTurns={timeBetweenCalculatingMapTurns}
         rowCount={rowCount}
