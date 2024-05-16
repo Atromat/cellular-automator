@@ -95,8 +95,6 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, rulese
   useEffect(() => {
       onWindowResize();
   }, [rulesetDetailsOpen])
-  
-  
 
   function createEmptyMap(numberOfRows, numberOfColumns) {
     const map = [];
