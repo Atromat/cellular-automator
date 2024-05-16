@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import './CellularAutomatonSimCanvas.css';
 import applyRulesToMap from '../SimulationLogic/CellularAutomatonSimLogic';
 
-function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, rulesetDetailsOpen }) {
+function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, detailsToggled }) {
 
   const [config, setConfig] = useState({
     win: {
@@ -95,7 +95,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, rulese
 
   useEffect(() => {
       onWindowResize();
-  }, [rulesetDetailsOpen])
+  }, [detailsToggled])
 
   function createEmptyMap(numberOfRows, numberOfColumns) {
     const map = [];
