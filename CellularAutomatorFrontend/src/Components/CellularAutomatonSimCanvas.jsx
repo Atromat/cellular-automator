@@ -2,13 +2,9 @@ import { useRef, useEffect, useState } from 'react';
 import './CellularAutomatonSimCanvas.css';
 import applyRulesToMap from '../SimulationLogic/CellularAutomatonSimLogic';
 
-function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, detailsToggled, resetClicked }) {
+function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, detailsToggled, resetClicked, timeBetweenCalculatingMapTurns, rowCount, columnCount }) {
 
   const [config, setConfig] = useState({
-    win: {
-      width: 100,
-      height: 100
-    },
     keys: {
       37: {
         x: -5,
@@ -33,7 +29,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, detail
     },
     viewport: {x: 0, y: 0, moving: false},
     tileSize: 30,
-    map: createEmptyMap(90, 140),
+    map: createEmptyMap(rowCount, columnCount),
     previousMapCalcTime: Date.now(),
     timeBetweenMapCalc: 300,
     isSimStopped: true,
@@ -96,6 +92,14 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, detail
   useEffect(() => {
       onWindowResize();
   }, [detailsToggled])
+
+  useEffect(() => {
+    config.map = createEmptyMap(rowCount, columnCount);
+  }, [rowCount, columnCount])
+  
+  useEffect(() => {
+    config.timeBetweenMapCalc = timeBetweenCalculatingMapTurns;
+  }, [timeBetweenCalculatingMapTurns])
 
   function createEmptyMap(numberOfRows, numberOfColumns) {
     const map = [];
@@ -202,7 +206,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, detail
   }
 
   function handleKeyDown(event) {
-    event.preventDefault();
+    //event.preventDefault();
 
     if (event.keyCode >= 37 && event.keyCode <= 40) {
       config.viewport.moving = true;
@@ -216,7 +220,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, detail
   }
 
   function handleKeyUp(event) {
-    event.preventDefault();
+    //event.preventDefault();
 
     if (event.keyCode >= 37 && event.keyCode <= 40) {
       config.viewport.moving = false;

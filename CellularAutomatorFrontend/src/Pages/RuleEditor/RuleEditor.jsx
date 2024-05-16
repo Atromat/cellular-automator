@@ -8,7 +8,10 @@ function RuleEditor() {
   const [activeRuleSet, setActiveRuleSet] = useState(gameOfLifeRuleset);
   const [detailsToggled, setDetailsToggled] = useState(0);
   const [chosenRule, setChosenRule] = useState(gameOfLifeRuleset.rules[0]);
-  const [resetClicked, setResetClicked] = useState(0)
+  const [resetClicked, setResetClicked] = useState(0);
+  const [timeBetweenCalculatingMapTurns, setTimeBetweenCalculatingMapTurns] = useState(400);
+  const [rowCount, setRowCount] = useState(80);
+  const [columnCount, setColumnCount] = useState(120);
 
   function stopOrStartSimulation(event) {
     if (isSimulationStopped) {
@@ -35,6 +38,13 @@ function RuleEditor() {
   function handleClickDropdownElemRule(event, rule) {
     //event.preventDefault();
     setChosenRule(rule);
+  }
+
+  function parseAndSetStateInputNumber(event, setStateCallBack) {
+    const timeInput = parseInt(event.target.value);
+    if (!isNaN(timeInput)) {
+      setStateCallBack(timeInput);
+    }
   }
 
   return (
@@ -77,8 +87,22 @@ function RuleEditor() {
       <div id='SimulationControllButtonsContainer'>
         <button onClick={(e) => stopOrStartSimulation(e)}>{isSimulationStopped ? 'Start' : 'Stop'}</button>
         <button onClick={(e) => handleResetClick(e)}>Reset</button>
+        <span>Time between turns (milliseconds):</span>
+        <input type="number" onChange={(e) => parseAndSetStateInputNumber(e, setTimeBetweenCalculatingMapTurns)} min={100} value={timeBetweenCalculatingMapTurns}/>
+        <span>Size of map (row x column):</span>
+        <input type="number" onChange={(e) => parseAndSetStateInputNumber(e, setRowCount)} min={1} value={rowCount}/>
+        <span> X </span>
+        <input type="number" onChange={(e) => parseAndSetStateInputNumber(e, setColumnCount)} min={1} value={columnCount}/>
       </div>
-      <CellularAutomatonSimCanvas isSimulationStopped={isSimulationStopped} activeRuleSet={activeRuleSet} detailsToggled={detailsToggled} resetClicked={resetClicked} />
+      <CellularAutomatonSimCanvas 
+        isSimulationStopped={isSimulationStopped} 
+        activeRuleSet={activeRuleSet} 
+        detailsToggled={detailsToggled} 
+        resetClicked={resetClicked}
+        timeBetweenCalculatingMapTurns={timeBetweenCalculatingMapTurns}
+        rowCount={rowCount}
+        columnCount={columnCount}
+      />
     </div>
   )
 }
