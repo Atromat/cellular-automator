@@ -4,6 +4,7 @@ import applyRulesToMap from '../SimulationLogic/CellularAutomatonSimLogic';
 
 function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, rulesetDetailsOpen }) {
 
+  const [mapSize, setMapSize] = useState({amountOfTilesY: 10, amountOfTilesX: 10});
   const [config, setConfig] = useState({
     win: {
       width: 100,
@@ -33,7 +34,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, rulese
     },
     viewport: {x: 0, y: 0, moving: false},
     tileSize: 30,
-    map: createEmptyMap(90, 140),
+    map: createEmptyMap(mapSize.amountOfTilesY, mapSize.amountOfTilesX),
     previousMapCalcTime: Date.now(),
     timeBetweenMapCalc: 300,
     isSimStopped: true,
@@ -90,6 +91,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, rulese
 
   useEffect(() => {
     config.activeRuleSet = activeRuleSet;
+    resetMap();
   }, [activeRuleSet])
 
   useEffect(() => {
@@ -108,6 +110,10 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, rulese
     }
 
     return map;
+  }
+
+  function resetMap() {
+    config.map = createEmptyMap(config.map.length, config.map[0].length);
   }
 
   function drawMap(ctx) {
