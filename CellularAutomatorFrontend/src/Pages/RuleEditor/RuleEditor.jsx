@@ -6,7 +6,7 @@ import { gameOfLifeRuleset, rule30Ruleset } from '../../SimulationLogic/PremadeR
 function RuleEditor() {
   const [isSimulationStopped, setIsSimulationStopped] = useState(true);
   const [activeRuleSet, setActiveRuleSet] = useState(gameOfLifeRuleset);
-  const [rulesetDetailsOpen, setRulesetDetailsOpen] = useState(false);
+  const [detailsToggled, setDetailsToggled] = useState(0);
   const [chosenRule, setChosenRule] = useState(gameOfLifeRuleset.rules[0]);
 
   function stopOrStartSimulation(event) {
@@ -26,11 +26,7 @@ function RuleEditor() {
   }
 
   function handleDetailsToggle(event) {
-    if (rulesetDetailsOpen) {
-      setRulesetDetailsOpen(false);
-    } else {
-      setRulesetDetailsOpen(true);
-    }
+    setDetailsToggled(detailsToggled + 1);
   }
 
   function handleClickDropdownElemRuleset(event, ruleset) {
@@ -81,8 +77,11 @@ function RuleEditor() {
       )}
       </>
       </details>
-      <button onClick={(e) => stopOrStartSimulation(e)}>{isSimulationStopped ? 'Start' : 'Stop'}</button>
-      <CellularAutomatonSimCanvas isSimulationStopped={isSimulationStopped} activeRuleSet={activeRuleSet} rulesetDetailsOpen={rulesetDetailsOpen} />
+      <div id='SimulationControllButtonsContainer'>
+        <button onClick={(e) => stopOrStartSimulation(e)}>{isSimulationStopped ? 'Start' : 'Stop'}</button>
+        <></>
+      </div>
+      <CellularAutomatonSimCanvas isSimulationStopped={isSimulationStopped} activeRuleSet={activeRuleSet} detailsToggled={detailsToggled} />
     </div>
   )
 }
