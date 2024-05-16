@@ -17,14 +17,6 @@ function RuleEditor() {
     }
   }
 
-  function changeRuleSet(event) {
-    if (activeRuleSet === gameOfLifeRuleset) {
-      setActiveRuleSet(rule30Ruleset);
-    } else {
-      setActiveRuleSet(gameOfLifeRuleset);
-    }
-  }
-
   function handleDetailsToggle(event) {
     setDetailsToggled(detailsToggled + 1);
   }
