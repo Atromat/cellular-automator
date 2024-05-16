@@ -49,7 +49,7 @@ function RuleEditor() {
 
   return (
     <div id='RuleEditor'>
-      <details className='RuleEditorDetails' onToggle={(e) => handleDetailsToggle(e)}>
+      <details id='RulesetDetails' className='RuleEditorDetails' onToggle={(e) => handleDetailsToggle(e)}>
       <summary>
           Choose ruleset: 
           <div className="dropdown">
@@ -65,8 +65,7 @@ function RuleEditor() {
         <div key={i} className='CellTypeSummaryElement'>{cellType.cellType}</div>
       )}
       </>
-      </details>
-      <details className='RuleEditorDetails' onToggle={(e) => handleDetailsToggle(e)}>
+      <details id='RuleDetails' className='RuleEditorDetails' onToggle={(e) => handleDetailsToggle(e)}>
       <summary>
           Choose rule: 
           <div className="dropdown">
@@ -84,6 +83,8 @@ function RuleEditor() {
       )}
       </>
       </details>
+      </details>
+
       <div id='SimulationControllButtonsContainer'>
         <button onClick={(e) => stopOrStartSimulation(e)}>{isSimulationStopped ? 'Start' : 'Stop'}</button>
         <button onClick={(e) => handleResetClick(e)}>Reset</button>
