@@ -144,6 +144,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, height
   }
 
   function draw(ctx) {
+    //onWindowResize();  //ASK MENTOR THIS DOESN'T FEEL RIGHT BUT WORKS
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     //resizeCanvasToDisplaySize(ctx.canvas);
     if (config.viewport.moving = true) {
