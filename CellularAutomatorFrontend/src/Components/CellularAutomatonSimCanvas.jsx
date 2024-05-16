@@ -130,6 +130,12 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, rulese
     }
   }
 
+  function drawBorder(ctx) {
+    ctx.lineWidth = 2;
+    ctx.strokeStyle="#FF0000";
+    ctx.strokeRect(-config.viewport.x, -config.viewport.y, config.map[0].length * config.tileSize, config.map.length * config.tileSize);
+  }
+
   function draw(ctx) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     //resizeCanvasToDisplaySize(ctx.canvas);
@@ -138,6 +144,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, rulese
     }
 
     drawMap(ctx);
+    drawBorder(ctx);
   }
 
   function moveViewport() {
