@@ -24,7 +24,7 @@
   color: black;
 }
 
-.Topnav .NavbarLink.active {
+.Topnav .ActivePage {
   background-color: #04AA6D;
   color: white;
 }
