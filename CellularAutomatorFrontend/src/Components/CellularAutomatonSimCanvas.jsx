@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import './CellularAutomatonSimCanvas.css';
 import applyRulesToMap from '../SimulationLogic/CellularAutomatonSimLogic';
 
-function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, heightChanged, resetClicked, timeBetweenCalculatingMapTurns, rowCount, columnCount }) {
+function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, resetClicked, timeBetweenCalculatingMapTurns, rowCount, columnCount }) {
 
   const [config, setConfig] = useState({
     keys: {
@@ -53,7 +53,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, height
     }
     
     canvas.addEventListener('mousedown', handleCellClickEvent);
-    window.addEventListener('resize', onWindowResize);
+    window.addEventListener('resize', resizeCanvas);
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
     document.addEventListener('wheel', handleMouseWheel);
@@ -73,7 +73,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, height
     return () => {
       window.cancelAnimationFrame(animationFrameId);
       canvas.removeEventListener('mousedown', handleCellClickEvent);
-      window.removeEventListener('resize', onWindowResize);
+      window.removeEventListener('resize', resizeCanvas);
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('keyup', handleKeyUp);
       document.removeEventListener('wheel', handleMouseWheel);
@@ -88,10 +88,6 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, height
     config.activeRuleSet = activeRuleSet;
     resetMap();
   }, [activeRuleSet, resetClicked])
-
-  useEffect(() => {
-      onWindowResize();
-  }, [heightChanged])
 
   useEffect(() => {
     config.map = createEmptyMap(rowCount, columnCount);
@@ -144,9 +140,8 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, height
   }
 
   function draw(ctx) {
-    //onWindowResize();  //ASK MENTOR THIS DOESN'T FEEL RIGHT BUT WORKS
+    resizeCanvas();
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-    //resizeCanvasToDisplaySize(ctx.canvas);
     if (config.viewport.moving = true) {
       moveViewport();
     }
@@ -169,34 +164,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, height
     }
   }
 
-  /*
-  //ask a mentor about this
-  function resizeCanvasToDisplaySize(canvas) {
-    //const { width, height } = canvas.getBoundingClientRect();
-    const width  = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    config.win.width = width;
-    config.win.height = height;
-
-    if (canvas.width !== width) {
-      //console.log(`context.canvas.getBoundingClientRect.height: ${canvas.getBoundingClientRect().height}`);
-      console.log(`canvas.width: ${canvas.width} !== Rect.width: ${canvas.getBoundingClientRect().width}`);
-      canvas.width = width;
-      //canvas.height = height;
-      //return true;
-    }
-
-    if (canvas.height !== height) {
-      console.log(`canvas.height: ${canvas.height} !== Rect.height: ${canvas.getBoundingClientRect().height}`);
-      console.log(`canvas.height: ${canvas.height} !== canvas.clientHeight: ${canvas.clientHeight}`);
-      canvas.height = height;
-    }
-
-    //return false
-  }
-  */
-
-  function onWindowResize() {
+  function resizeCanvas() {
     if (canvasRef && canvasRef.current) {
       const canvas = canvasRef.current;
       canvas.width = 1;

@@ -6,7 +6,6 @@ import { gameOfLifeRuleset, rule30Ruleset } from '../../SimulationLogic/PremadeR
 function RuleEditor() {
   const [isSimulationStopped, setIsSimulationStopped] = useState(true);
   const [activeRuleSet, setActiveRuleSet] = useState(gameOfLifeRuleset);
-  const [heightChanged, setHeightChanged] = useState(0);
   const [chosenRule, setChosenRule] = useState(gameOfLifeRuleset.rules[0]);
   const [resetClicked, setResetClicked] = useState(0);
   const [timeBetweenCalculatingMapTurns, setTimeBetweenCalculatingMapTurns] = useState(400);
@@ -21,24 +20,18 @@ function RuleEditor() {
     }
   }
 
-  function handleHightChangeOfElements(event) {
-    setHeightChanged(heightChanged + 1);
-  }
-
   function handleResetClick(event) {
     setResetClicked(resetClicked + 1);
   }
 
   function handleClickDropdownElemRuleset(event, ruleset) {
     event.preventDefault();
-    handleHightChangeOfElements();
     setActiveRuleSet(ruleset);
     setChosenRule(ruleset.rules[0]);
   }
 
   function handleClickDropdownElemRule(event, rule) {
     event.preventDefault();
-    handleHightChangeOfElements();
     setChosenRule(rule);
   }
 
@@ -51,7 +44,7 @@ function RuleEditor() {
 
   return (
     <div id='RuleEditor'>
-      <details id='RulesetDetails' className='RuleEditorDetails' onToggle={(e) => handleHightChangeOfElements(e)}>
+      <details id='RulesetDetails' className='RuleEditorDetails'>
       <summary>
           Choose ruleset: 
           <div className="dropdown">
@@ -67,7 +60,7 @@ function RuleEditor() {
         <div key={i} className='CellTypeSummaryElement'>{cellType.cellType}</div>
       )}
       </>
-      <details id='RuleDetails' className='RuleEditorDetails' onToggle={(e) => handleHightChangeOfElements(e)}>
+      <details id='RuleDetails' className='RuleEditorDetails'>
       <summary>
           Choose rule: 
           <div className="dropdown">
@@ -99,8 +92,7 @@ function RuleEditor() {
       </div>
       <CellularAutomatonSimCanvas 
         isSimulationStopped={isSimulationStopped} 
-        activeRuleSet={activeRuleSet} 
-        heightChanged={heightChanged}
+        activeRuleSet={activeRuleSet}
         resetClicked={resetClicked}
         timeBetweenCalculatingMapTurns={timeBetweenCalculatingMapTurns}
         rowCount={rowCount}
