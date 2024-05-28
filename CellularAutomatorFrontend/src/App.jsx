@@ -4,7 +4,7 @@ import './App.css'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from './Pages/Home';
 import RuleEditor from './Pages/RuleEditor';
-import Login from './Pages/Login';
+import SignIn from './Pages/SignIn';
 import Register from './Pages/Register';
 import ErrorPage from './Pages/ErrorPage';
 import Layout from './Pages/Layout';
@@ -27,8 +27,8 @@ function App() {
           element: <RuleEditor />,
         },
         {
-          path: "/Login",
-          element: <Login />,
+          path: "/SignIn",
+          element: <SignIn />,
         },
         {
           path: "/Register",
