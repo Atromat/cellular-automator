@@ -13,11 +13,7 @@ function RuleEditor() {
   const [columnCount, setColumnCount] = useState(120);
 
   function stopOrStartSimulation(event) {
-    if (isSimulationStopped) {
-      setIsSimulationStopped(false);
-    } else {
-      setIsSimulationStopped(true);
-    }
+    setIsSimulationStopped(!isSimulationStopped);
   }
 
   function handleResetClick(event) {
