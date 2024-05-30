@@ -1,4 +1,5 @@
 import CellEditorModal from '../CellEditorModal';
+import CellTypeDropdownMenu from '../CellTypeDropdownMenu';
 import './CellTypeEditorContainer.css';
 import { useState } from 'react';
 
@@ -37,24 +38,7 @@ function CellTypeEditorContainer({ chosenCellType, cellTypes, handleClickDropdow
 
   return (
     <div className='CellTypeEditorContainer'>
-      <div className="CellTypeDropdown">
-        {chosenCellType ? (
-          <button className="CellTypeDropbtn" style={{backgroundColor: chosenCellType.cellColor}}>{chosenCellType.cellType}</button>
-        ) : (
-          <button className="CellTypeDropbtn" style={{backgroundColor: '#04AA6D'}}>Choose a cell type</button>
-        )}
-        
-        <div className="CellTypeDropdownContent">
-          {cellTypes.map((cellType) =>
-              <div 
-              key={cellType.id} 
-              className='CellTypeDropdownElement' 
-              onClick={(e) => handleClickDropdownElemCellType(e, cellType)}
-              style={{borderColor: cellType.cellColor}}
-            >{cellType.cellType}</div>
-          )}
-        </div>
-      </div>
+      <CellTypeDropdownMenu chosenCellType={chosenCellType} cellTypes={cellTypes} handleClickDropdownElemCellType={handleClickDropdownElemCellType} />
 
       <button className='EditorButton' onClick={(e) => handleClickAdd(e)}>Add</button>
       <button className='EditorButton' onClick={(e) => handleClickEdit(e)}>Edit</button>
