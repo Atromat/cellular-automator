@@ -20,8 +20,6 @@ function CellTypeEditorContainer({ chosenCellType, cellTypes, handleClickDropdow
 
   function handleSave(event, cellType) {
     event.preventDefault();
-    console.log("handleSave")
-    console.log(cellType);
     switch (modalOpenFor) {
       case "adding":
         addCellType(cellType);
