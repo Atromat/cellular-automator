@@ -2,14 +2,14 @@ function CellTypeDropdownMenu({chosenCellType, cellTypes, handleClickDropdownEle
   return (
     <div className="CellTypeDropdown">
       {chosenCellType ? (
-        <button className="CellTypeDropbtn" style={{backgroundColor: chosenCellType.cellColor}}>{chosenCellType.cellType}</button>
+        <button className="CellTypeDropbtn FirstColumnWidth" style={{backgroundColor: chosenCellType.cellColor}}>{chosenCellType.cellType}</button>
       ) : (
-        <button className="CellTypeDropbtn" style={{backgroundColor: '#04AA6D'}}>Choose a cell type</button>
+        <button className="CellTypeDropbtn FirstColumnWidth" style={{backgroundColor: '#04AA6D'}}>Choose a cell</button>
       )}
       
       <div className="CellTypeDropdownContent">
         {cellTypes.map((cellType) =>
-            <div 
+          <div 
             key={cellType.id + cellType.cellType} 
             className='CellTypeDropdownElement' 
             onClick={(e) => handleClickDropdownElemCellType(e, cellType)}
