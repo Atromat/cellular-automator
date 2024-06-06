@@ -1,0 +1,82 @@
+/* Dropdown Button */
+.PatternDropbtn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.PatternDropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.PatternDropdownContent {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.PatternDropdownContent div {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.PatternDropdownContent div:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.PatternDropdown:hover .PatternDropdownContent {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.PatternDropdown:hover .PatternDropbtn {background-color: #3e8e41;}
+
+.PatternEditorContainer {
+  cursor: pointer;
+}
+
+.PatternDescription {
+  color: white;
+  padding: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  font-size: 16px;
+  border: none;
+  display: inline-block;
+}
+
+.CellNumberInput {
+  font-size: 16px;
+  padding: 14px;
+  padding-left: 1px;
+  padding-right: 1px;
+  text-align: center;
+  width: 3em;
+}
+
+.OperationSelector {
+  font-size: 16px;
+  padding: 14px;
+  padding-left: 1px;
+  padding-right: 1px;
+  padding-bottom: 15px;
+  text-align: center;
+}
+
+.PatternDescriptionInputContainer {
+  color: white;
+  padding-left: 16px;
+  padding-right: 16px;
+  font-size: 16px;
+  border: none;
+  display: inline-block;
+}
