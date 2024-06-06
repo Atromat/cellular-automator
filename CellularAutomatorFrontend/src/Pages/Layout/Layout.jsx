@@ -12,7 +12,7 @@ function Layout() {
   return (
     <div className="Layout">
       <nav className={ responsiveToggled ? 'Topnav Responsive' : 'Topnav' }>
-        <Link to="/" className={addActivePageToClassNameIfLocationEqual('/', 'NavbarLink')}>Home</Link>
+        <Link to="/" className={addActivePageToClassNameIfLocationEqual('/', 'NavbarLink')}>Cellular Automator</Link>
         <Link to="/RuleEditor" className={addActivePageToClassNameIfLocationEqual('/RuleEditor', 'NavbarLink')}>Rule Editor</Link>
         <Link to="/SignIn" className={addActivePageToClassNameIfLocationEqual('/SignIn', 'NavbarLink')}>Sign In</Link>
         <Link to="/Register" className={addActivePageToClassNameIfLocationEqual('/Register', 'NavbarLink')}>Register</Link>
