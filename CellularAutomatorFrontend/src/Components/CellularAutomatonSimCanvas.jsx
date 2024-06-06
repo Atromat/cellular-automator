@@ -131,7 +131,8 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, resetC
         let tileX = x * config.tileSize - config.viewport.x;
         let tileY = y * config.tileSize - config.viewport.y;
         if (y >= 0 && x >= 0 && y < config.map.length && x < config.map[0].length) {
-          ctx.fillStyle = config.activeRuleSet.cellTypes.find((cellType) => cellType.id === config.map[y][x]).cellColor;
+          const cellToDraw = config.activeRuleSet.cellTypes.find((cellType) => cellType.id === config.map[y][x]);
+          ctx.fillStyle = cellToDraw.cellColor;
           ctx.fillRect(tileX, tileY, config.tileSize - 1, config.tileSize - 1);
         }
       }
