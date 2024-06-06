@@ -10,7 +10,7 @@ function CellTypeDropdownMenu({chosenCellType, cellTypes, handleClickDropdownEle
       <div className="CellTypeDropdownContent">
         {cellTypes.map((cellType) =>
             <div 
-            key={cellType.id} 
+            key={cellType.id + cellType.cellType} 
             className='CellTypeDropdownElement' 
             onClick={(e) => handleClickDropdownElemCellType(e, cellType)}
             style={{borderColor: cellType.cellColor}}
