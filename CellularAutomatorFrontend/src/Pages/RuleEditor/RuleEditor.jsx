@@ -3,16 +3,18 @@ import CellularAutomatonSimCanvas from '../../Components';
 import './RuleEditor.css';
 import { gameOfLifeRuleset, rule30Ruleset } from '../../SimulationLogic/PremadeRulesets';
 import CellTypeEditorContainer from '../../Components/CellTypeEditorContainer/CellTypeEditorContainer';
+import RuleCreator from '../../Components/RuleCreator';
 
 function RuleEditor() {
   const [isSimulationStopped, setIsSimulationStopped] = useState(true);
   const [activeRuleSet, setActiveRuleSet] = useState(gameOfLifeRuleset);
-  const [chosenRule, setChosenRule] = useState(gameOfLifeRuleset.rules[0]);
+  const [chosenRule, setChosenRule] = useState(undefined);
   const [chosenCellType, setChosenCellType] = useState(undefined);
   const [resetClicked, setResetClicked] = useState(0);
   const [timeBetweenCalculatingMapTurns, setTimeBetweenCalculatingMapTurns] = useState(400);
   const [rowCount, setRowCount] = useState(80);
   const [columnCount, setColumnCount] = useState(120);
+  const [chosenPattern, setChosenPattern] = useState(undefined);
 
   function stopOrStartSimulation(event) {
     setIsSimulationStopped(!isSimulationStopped);
@@ -25,12 +27,14 @@ function RuleEditor() {
   function handleClickDropdownElemRuleset(event, ruleset) {
     event.preventDefault();
     setActiveRuleSet(ruleset);
-    setChosenRule(ruleset.rules[0]);
+    setChosenCellType(undefined);
   }
 
   function handleClickDropdownElemRule(event, rule) {
     event.preventDefault();
     setChosenRule(rule);
+    setRuleCreatorDisplayMode("justShow");
+    setChosenPattern(undefined);
   }
 
   function parseAndSetStateInputNumber(event, setStateCallBack) {
@@ -57,12 +61,14 @@ function RuleEditor() {
     }
 
     activeRuleSet.cellTypes.push(newCellType);
+    setActiveRuleSet({...activeRuleSet});
   }
 
   function editCellType(cellType) {
     const cellTypeToEdit = activeRuleSet.cellTypes.find(cellT => cellT.id === cellType.id);
     cellTypeToEdit.cellColor = cellType.cellColor;
-    cellTypeToEdit.cellType = cellTypeToEdit.cellType;
+    cellTypeToEdit.cellType = cellType.cellType;
+    setActiveRuleSet({...activeRuleSet});
   }
 
   function deleteCellType(cellType) {
@@ -103,13 +109,19 @@ function RuleEditor() {
     deleteCellType(chosenCellType);
   }
 
+  function deleteChosenRule() {
+    const ruleToDelIndex = activeRuleSet.rules.findIndex(r => r.id === chosenRule.id);
+    activeRuleSet.rules.splice(ruleToDelIndex, 1);
+    setChosenRule(undefined);
+    setActiveRuleSet({...activeRuleSet});
+  }
+
   return (
     <div id='RuleEditor'>
       <details id='RulesetDetails' className='RuleEditorDetails'>
         <summary>
-          Choose ruleset: 
           <div className="dropdown">
-            <button className="dropbtn">{activeRuleSet.ruleSetName}</button>
+            <button className="dropbtn FirstColumnWidth">{activeRuleSet.ruleSetName}</button>
             <div className="dropdown-content">
               <div className='DropdownElement' onClick={(e) => handleClickDropdownElemRuleset(e, gameOfLifeRuleset)} >Game Of Life</div>
               <div className='DropdownElement' onClick={(e) => handleClickDropdownElemRuleset(e, rule30Ruleset)}>Rule 30</div>
@@ -126,24 +138,17 @@ function RuleEditor() {
           handleClickDeleteCellType={handleClickDeleteCellType}
         />
 
-        <details id='RuleDetails' className='RuleEditorDetails'>
-        <summary>
-          Choose rule: 
-          <div className="dropdown">
-            <button className="dropbtn">{chosenRule.ruleName}</button>
-            <div className="dropdown-content">
-              {activeRuleSet.rules.map((rule, i) =>
-                <div key={i} className='DropdownElement' onClick={(e) => handleClickDropdownElemRule(e, rule)}>{rule.ruleName}</div>
-              )}
-            </div>
-          </div>
-        </summary>
-        <>
-        {chosenRule.patterns[0].coordsRelativeToCell.map((coord, i) =>
-          <div key={i}>r: {coord.r}, c: {coord.c}</div>
-        )}
-        </>
-        </details>
+        <RuleCreator 
+          chosenRule={chosenRule}
+          activeRuleSet={activeRuleSet}
+          setActiveRuleSet={setActiveRuleSet}
+          handleClickDropdownElemRule={handleClickDropdownElemRule}
+          deleteChosenRule={deleteChosenRule}
+          setChosenRule={setChosenRule}
+          chosenPattern={chosenPattern}
+          setChosenPattern={setChosenPattern}
+        />
+
       </details>
 
       <div id='SimulationControllButtonsContainer'>
