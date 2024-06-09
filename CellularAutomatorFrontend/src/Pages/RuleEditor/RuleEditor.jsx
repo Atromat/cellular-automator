@@ -129,6 +129,7 @@ function RuleEditor() {
     setChosenPattern(undefined);
     setActiveRuleSet({
       id: 0,
+      ruleSetName: "",
       cellTypes: [
         {
           id: rulesets.reduce((maxRulesetId, ruleset) => Math.max(maxRulesetId, ruleset.id), 0) + 1,
