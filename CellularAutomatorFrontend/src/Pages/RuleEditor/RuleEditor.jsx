@@ -179,6 +179,42 @@ function RuleEditor() {
     activeRuleSet.ruleSetName = event.target.value;
   }
 
+  function isRulesetValid(ruleset) {
+    if (!ruleset) {
+      return false;
+    }
+
+    if (!ruleset.cellTypes) {
+      return false;
+    }
+
+    if (!ruleset.rules) {
+      return false;
+    }
+
+    if (ruleset.rules.length < 1) {
+      return false;
+    }
+
+    for (const rule of ruleset.rules) {
+      if (!rule.patterns) {
+        return false;
+      }
+
+      for (const pattern of rule.patterns) {
+        if (!pattern.coordsRelativeToCell) {
+          return false;
+        }
+
+        if (pattern.coordsRelativeToCell.length < 1) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
   return (
     <div id='RuleEditor'>
       <details id='RulesetDetails' className='RuleEditorDetails'>
@@ -186,14 +222,14 @@ function RuleEditor() {
           {displayMode !== "justShow" ? (
             <input className="TextInput" type="text" value={activeRuleSet.ruleSetName} onChange={(e) => handleChangeRulesetNameInput(e)} placeholder="Ruleset name"></input>
           ) : (
-          <div className="dropdown">
-            <button className="dropbtn FirstColumnWidth">{activeRuleSet ? activeRuleSet.ruleSetName : "Choose a ruleset"}</button>
-            <div className="dropdown-content">
-              {rulesets.map(ruleset => 
-                <div key={ruleset.id + ruleset.ruleSetName} className='DropdownElement' onClick={(e) => handleClickDropdownElemRuleset(e, ruleset)}>{ruleset.ruleSetName}</div>
-              )}
+            <div className="dropdown">
+              <button className="dropbtn FirstColumnWidth">{activeRuleSet ? activeRuleSet.ruleSetName : "Choose a ruleset"}</button>
+              <div className="dropdown-content">
+                {rulesets.map(ruleset => 
+                  <div key={ruleset.id + ruleset.ruleSetName} className='DropdownElement' onClick={(e) => handleClickDropdownElemRuleset(e, ruleset)}>{ruleset.ruleSetName}</div>
+                )}
+              </div>
             </div>
-          </div>
           )}
 
           {displayMode !== "justShow" ? (
@@ -247,6 +283,8 @@ function RuleEditor() {
 
       </details>
 
+      {isRulesetValid(activeRuleSet) ? (
+      <>
       <div id='SimulationControllButtonsContainer'>
         <button onClick={(e) => stopOrStartSimulation(e)}>{isSimulationStopped ? 'Start' : 'Stop'}</button>
         <button onClick={(e) => handleResetClick(e)}>Reset</button>
@@ -258,18 +296,19 @@ function RuleEditor() {
         <input type="number" onChange={(e) => parseAndSetStateInputNumber(e, setColumnCount)} min={1} value={columnCount}/>
       </div>
 
-      {activeRuleSet && activeRuleSet.rules.length > 0 ? (
-        <CellularAutomatonSimCanvas 
-          isSimulationStopped={isSimulationStopped} 
-          activeRuleSet={activeRuleSet}
-          resetClicked={resetClicked}
-          timeBetweenCalculatingMapTurns={timeBetweenCalculatingMapTurns}
-          rowCount={rowCount}
-          columnCount={columnCount}
-          chosenCellType={chosenCellType}
-        />
+      
+      <CellularAutomatonSimCanvas 
+        isSimulationStopped={isSimulationStopped} 
+        activeRuleSet={activeRuleSet}
+        resetClicked={resetClicked}
+        timeBetweenCalculatingMapTurns={timeBetweenCalculatingMapTurns}
+        rowCount={rowCount}
+        columnCount={columnCount}
+        chosenCellType={chosenCellType}
+      />
+      </>
       ) : (
-        <h1>Choose a ruleset with at least one rule</h1>
+        <h1>Choose or create a ruleset with at least one rule</h1>
       )}
 
     </div>
