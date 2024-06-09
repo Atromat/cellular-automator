@@ -175,10 +175,17 @@ function RuleEditor() {
   }
   //#endregion
 
+  function handleChangeRulesetNameInput(event) {
+    activeRuleSet.ruleSetName = event.target.value;
+  }
+
   return (
     <div id='RuleEditor'>
       <details id='RulesetDetails' className='RuleEditorDetails'>
         <summary>
+          {displayMode !== "justShow" ? (
+            <input className="TextInput" type="text" value={activeRuleSet.ruleSetName} onChange={(e) => handleChangeRulesetNameInput(e)} placeholder="Ruleset name"></input>
+          ) : (
           <div className="dropdown">
             <button className="dropbtn FirstColumnWidth">{activeRuleSet ? activeRuleSet.ruleSetName : "Choose a ruleset"}</button>
             <div className="dropdown-content">
@@ -187,6 +194,7 @@ function RuleEditor() {
               )}
             </div>
           </div>
+          )}
 
           {displayMode !== "justShow" ? (
             <>
