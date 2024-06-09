@@ -224,11 +224,15 @@ function RuleEditor() {
           ) : (
             <div className="dropdown">
               <button className="dropbtn FirstColumnWidth">{activeRuleSet ? activeRuleSet.ruleSetName : "Choose a ruleset"}</button>
+              {rulesets && rulesets.length > 0 ? (
               <div className="dropdown-content">
                 {rulesets.map(ruleset => 
                   <div key={ruleset.id + ruleset.ruleSetName} className='DropdownElement' onClick={(e) => handleClickDropdownElemRuleset(e, ruleset)}>{ruleset.ruleSetName}</div>
                 )}
               </div>
+              ) : (
+                <></>
+              )}
             </div>
           )}
 
