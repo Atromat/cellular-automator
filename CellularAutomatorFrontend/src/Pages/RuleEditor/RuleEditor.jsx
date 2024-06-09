@@ -219,7 +219,7 @@ function RuleEditor() {
 
         </summary>
 
-        {activeRuleSet ? (
+        {activeRuleSet && displayMode === "justShow" ? (
           <>
           <CellTypeEditorContainer 
             chosenCellType={chosenCellType} 
