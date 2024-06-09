@@ -117,6 +117,63 @@ function RuleEditor() {
     setActiveRuleSet({...activeRuleSet});
   }
 
+  function resetChosen() {
+    setActiveRuleSet(undefined);
+    setChosenRule(undefined);
+    setChosenPattern(undefined);
+  }
+
+  //#region Add, Edit, Delete, Save, Cancel
+  function handleClickAddRuleset() {
+    setChosenRule(undefined);
+    setChosenPattern(undefined);
+    setActiveRuleSet({
+      id: 0,
+      cellTypes: [
+        {
+          id: rulesets.reduce((maxRulesetId, ruleset) => Math.max(maxRulesetId, ruleset.id), 0) + 1,
+          cellType: 'empty',
+          cellColor: '#000000'
+        }
+      ],
+      rules: []
+    });
+    setDisplayMode("add");
+  }
+
+  function handleClickEditRuleset() {
+    const rulesetToEdit = structuredClone(activeRuleSet);
+    setActiveRuleSet(rulesetToEdit);
+    setDisplayMode("edit");
+  }
+
+  function handleClickDeleteRuleset() {
+    resetChosen();
+    const rulesetToDelIndex = rulesets.findIndex(r => r.id === activeRuleSet.id);
+    rulesets.splice(rulesetToDelIndex, 1);
+    setDisplayMode("justShow");
+  }
+
+  function handleClickSaveRuleset() {
+    if (displayMode === "add") {
+      rulesets.push(activeRuleSet);
+    }
+
+    if (displayMode === "edit") {
+      const rulesetIndex = rulesets.findIndex(ruleset => ruleset.id === activeRuleSet.id);
+      rulesets.splice(rulesetIndex, 1, activeRuleSet);
+    }
+    
+    setRulesets({...rulesets});
+    setDisplayMode("justShow");
+  }
+
+  function handleClickCancelRuleset() {
+    resetChosen();
+    setDisplayMode("justShow");
+  }
+  //#endregion
+
   return (
     <div id='RuleEditor'>
       <details id='RulesetDetails' className='RuleEditorDetails'>
