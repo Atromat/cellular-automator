@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import './CellularAutomatonSimCanvas.css';
 import applyRulesToMap from '../SimulationLogic/CellularAutomatonSimLogic';
 
-function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, resetClicked, timeBetweenCalculatingMapTurns, rowCount, columnCount }) {
+function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, resetClicked, timeBetweenCalculatingMapTurns, rowCount, columnCount, chosenCellType }) {
 
   const [config, setConfig] = useState({
     keys: {
@@ -33,7 +33,8 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, resetC
     previousMapCalcTime: Date.now(),
     timeBetweenMapCalc: 300,
     isSimStopped: true,
-    activeRuleSet: undefined
+    activeRuleSet: undefined,
+    chosenCellType: undefined
   });
 
   const canvasRef = useRef(null)
@@ -53,7 +54,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, resetC
     }
     
     canvas.addEventListener('mousedown', handleCellClickEvent);
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', resizeCanvas); //TODO most likely not necessary anymore
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
     document.addEventListener('wheel', handleMouseWheel);
@@ -73,7 +74,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, resetC
     return () => {
       window.cancelAnimationFrame(animationFrameId);
       canvas.removeEventListener('mousedown', handleCellClickEvent);
-      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('resize', resizeCanvas); //TODO most likely not necessary anymore
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('keyup', handleKeyUp);
       document.removeEventListener('wheel', handleMouseWheel);
@@ -97,6 +98,10 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, resetC
     config.timeBetweenMapCalc = timeBetweenCalculatingMapTurns;
   }, [timeBetweenCalculatingMapTurns])
 
+  useEffect(() => {
+    config.chosenCellType = chosenCellType;
+  }, [chosenCellType])
+  
   function createEmptyMap(numberOfRows, numberOfColumns) {
     const map = [];
 
@@ -126,7 +131,8 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, resetC
         let tileX = x * config.tileSize - config.viewport.x;
         let tileY = y * config.tileSize - config.viewport.y;
         if (y >= 0 && x >= 0 && y < config.map.length && x < config.map[0].length) {
-          ctx.fillStyle = config.activeRuleSet.cellTypes.find((cellType) => cellType.id === config.map[y][x]).cellColor;
+          const cellToDraw = config.activeRuleSet.cellTypes.find((cellType) => cellType.id === config.map[y][x]);
+          ctx.fillStyle = cellToDraw.cellColor;
           ctx.fillRect(tileX, tileY, config.tileSize - 1, config.tileSize - 1);
         }
       }
@@ -205,6 +211,10 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, resetC
   function handleCellClick(canvas, event) {
     event.preventDefault();
 
+    if (!config.chosenCellType) {
+      return;
+    }
+
     let rect = canvas.getBoundingClientRect();
     let x = event.clientX - rect.left;
     let y = event.clientY - rect.top;
@@ -212,11 +222,7 @@ function CellularAutomatonSimCanvas({ isSimulationStopped, activeRuleSet, resetC
     let mapY = Math.floor((y + config.viewport.y) / config.tileSize);
 
     if (mapX >= 0 && mapX < config.map[0].length && mapY >= 0 && mapY < config.map.length) {
-      if (config.map[mapY][mapX] === 0) {
-        config.map[mapY][mapX] = 1;
-      } else {
-        config.map[mapY][mapX] = 0;
-      }
+      config.map[mapY][mapX] = config.chosenCellType.id;
     }
   }
 

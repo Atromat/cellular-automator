@@ -1,4 +1,5 @@
 const gameOfLifeRuleset = {
+  id: 0,
   ruleSetName: 'Game Of Life',
   cellTypes: [
     {
@@ -14,10 +15,13 @@ const gameOfLifeRuleset = {
   ],
   rules: [
     {
+      id: 0,
       ruleName: 'underpopulation',
       effectsCellType: 1,
       patterns: [
         {
+          id: 0,
+          name: "lesser than 2 alive",
           coordsRelativeToCell: [
             { r: -1, c: -1 },
             { r: -1, c: 0 },
@@ -28,7 +32,7 @@ const gameOfLifeRuleset = {
             { r: 1, c: 0 },
             { r: 1, c: 1 },
           ],
-          cellTypeToCheck: 0,
+          cellTypeToCheck: 1,
           operation: 'lesser',
           min: 0,
           max: 2
@@ -37,10 +41,13 @@ const gameOfLifeRuleset = {
       cellBecomes: 0
     },
     {
+      id: 1,
       ruleName: 'survive',
       effectsCellType: 1,
       patterns: [
         {
+          id: 1,
+          name: "2 or 3 alive",
           coordsRelativeToCell: [
             { r: -1, c: -1 },
             { r: -1, c: 0 },
@@ -60,10 +67,13 @@ const gameOfLifeRuleset = {
       cellBecomes: 1
     },
     {
+      id: 2,
       ruleName: 'overpopulation',
       effectsCellType: 1,
       patterns: [
         {
+          id: 2,
+          name: "more than 3 alive",
           coordsRelativeToCell: [
             { r: -1, c: -1 },
             { r: -1, c: 0 },
@@ -74,7 +84,7 @@ const gameOfLifeRuleset = {
             { r: 1, c: 0 },
             { r: 1, c: 1 },
           ],
-          cellTypeToCheck: 0,
+          cellTypeToCheck: 1,
           operation: 'greater',
           min: 3,
           max: undefined
@@ -83,10 +93,13 @@ const gameOfLifeRuleset = {
       cellBecomes: 0
     },
     {
+      id: 3,
       ruleName: 'reproduction',
       effectsCellType: 0,
       patterns: [
         {
+          id: 3,
+          name: "exactly 3 alive",
           coordsRelativeToCell: [
             { r: -1, c: -1 },
             { r: -1, c: 0 },
@@ -109,6 +122,7 @@ const gameOfLifeRuleset = {
 }
 
 const rule30Ruleset = {
+  id: 1,
   ruleSetName: 'Rule 30',
   cellTypes: [
     {
@@ -124,10 +138,13 @@ const rule30Ruleset = {
   ],
   rules: [
     {
+      id: 0,
       ruleName: 'rule111',
       effectsCellType: 0,
       patterns: [
         {
+          id: 0,
+          name: "111",
           coordsRelativeToCell: [
             { r: -1, c: -1 },
             { r: -1, c: 0 },
@@ -142,10 +159,13 @@ const rule30Ruleset = {
       cellBecomes: 0
     },
     {
+      id: 1,
       ruleName: 'rule110',
       effectsCellType: 0,
       patterns: [
         {
+          id: 0,
+          name: "110",
           coordsRelativeToCell: [
             { r: -1, c: -1 },
             { r: -1, c: 0 },
@@ -159,10 +179,13 @@ const rule30Ruleset = {
       cellBecomes: 0
     },
     {
+      id: 2,
       ruleName: 'rule101',
       effectsCellType: 0,
       patterns: [
         {
+          id: 2,
+          name: "101",
           coordsRelativeToCell: [
             { r: -1, c: -1 },
             { r: -1, c: 1 },
@@ -176,10 +199,13 @@ const rule30Ruleset = {
       cellBecomes: 0
     },
     {
+      id: 3,
       ruleName: 'rule100',
       effectsCellType: 0,
       patterns: [
         {
+          id: 3,
+          name: "100",
           coordsRelativeToCell: [
             { r: -1, c: -1 },
           ],
@@ -192,10 +218,13 @@ const rule30Ruleset = {
       cellBecomes: 1
     },
     {
+      id: 4,
       ruleName: 'rule011',
       effectsCellType: 0,
       patterns: [
         {
+          id: 4,
+          name: "011",
           coordsRelativeToCell: [
             { r: -1, c: 0 },
             { r: -1, c: 1 },
@@ -209,10 +238,13 @@ const rule30Ruleset = {
       cellBecomes: 1
     },
     {
+      id: 5,
       ruleName: 'rule010',
       effectsCellType: 0,
       patterns: [
         {
+          id: 5,
+          name: "010",
           coordsRelativeToCell: [
             { r: -1, c: 0 },
           ],
@@ -225,10 +257,13 @@ const rule30Ruleset = {
       cellBecomes: 1
     },
     {
+      id: 6,
       ruleName: 'rule001',
       effectsCellType: 0,
       patterns: [
         {
+          id: 6,
+          name: "001",
           coordsRelativeToCell: [
             { r: -1, c: 1 },
           ],

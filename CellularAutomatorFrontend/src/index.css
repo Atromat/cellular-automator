@@ -8,3 +8,63 @@ body {
   flex-flow: column;
   height: 100vh;
 }
+
+details>summary {
+ 
+  list-style: none;
+}
+summary::-webkit-details-marker {
+  display: none
+}
+
+summary::after {
+  content: ' ►';
+}
+
+details[open] > summary::after {
+  content: " ▼";
+}
+
+.CellAutomRect{
+  color: white;
+  padding: 16px;
+  padding-left: 0px;
+  padding-right: 0px;
+  font-size: 16px;
+  border: none;
+  text-align: center;
+}
+
+.UsualButtonStyle{
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  color: white;
+  border: none;
+  text-align: center;
+}
+
+.Green{
+  background-color: #04AA6D;
+}
+
+.Grey{
+  background-color: #333;
+}
+
+.FirstColumnWidth{
+  width: 180px;
+}
+
+.TextOutline{
+  text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+}
+
+.TextInput {
+  font-size: 16px;
+  padding: 14px;
+  padding-left: 0px;
+  padding-right: 0px;
+  text-align: center;
+  width: 176px;
+}
