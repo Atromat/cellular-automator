@@ -7,7 +7,7 @@ import RuleCreator from '../../Components/RuleCreator';
 
 function RuleEditor() {
   const [isSimulationStopped, setIsSimulationStopped] = useState(true);
-  const [activeRuleSet, setActiveRuleSet] = useState(gameOfLifeRuleset);
+  const [activeRuleSet, setActiveRuleSet] = useState(undefined);
   const [chosenRule, setChosenRule] = useState(undefined);
   const [chosenCellType, setChosenCellType] = useState(undefined);
   const [resetClicked, setResetClicked] = useState(0);
@@ -16,6 +16,7 @@ function RuleEditor() {
   const [columnCount, setColumnCount] = useState(120);
   const [chosenPattern, setChosenPattern] = useState(undefined);
   const [displayMode, setDisplayMode] = useState("justShow")
+  const [rulesets, setRulesets] = useState([gameOfLifeRuleset, rule30Ruleset]);
 
   function stopOrStartSimulation(event) {
     setIsSimulationStopped(!isSimulationStopped);
@@ -121,10 +122,11 @@ function RuleEditor() {
       <details id='RulesetDetails' className='RuleEditorDetails'>
         <summary>
           <div className="dropdown">
-            <button className="dropbtn FirstColumnWidth">{activeRuleSet.ruleSetName}</button>
+            <button className="dropbtn FirstColumnWidth">{activeRuleSet ? activeRuleSet.ruleSetName : "Choose a ruleset"}</button>
             <div className="dropdown-content">
-              <div className='DropdownElement' onClick={(e) => handleClickDropdownElemRuleset(e, gameOfLifeRuleset)} >Game Of Life</div>
-              <div className='DropdownElement' onClick={(e) => handleClickDropdownElemRuleset(e, rule30Ruleset)}>Rule 30</div>
+              {rulesets.map(ruleset => 
+                <div key={ruleset.id + ruleset.ruleSetName} className='DropdownElement' onClick={(e) => handleClickDropdownElemRuleset(e, ruleset)}>{ruleset.ruleSetName}</div>
+              )}
             </div>
           </div>
 
@@ -151,25 +153,31 @@ function RuleEditor() {
 
         </summary>
 
-        <CellTypeEditorContainer 
-          chosenCellType={chosenCellType} 
-          cellTypes={activeRuleSet.cellTypes} 
-          handleClickDropdownElemCellType={handleClickDropdownElemCellType}
-          addCellType={addCellType}
-          editCellType={editCellType}
-          handleClickDeleteCellType={handleClickDeleteCellType}
-        />
+        {activeRuleSet ? (
+          <>
+          <CellTypeEditorContainer 
+            chosenCellType={chosenCellType} 
+            cellTypes={activeRuleSet.cellTypes} 
+            handleClickDropdownElemCellType={handleClickDropdownElemCellType}
+            addCellType={addCellType}
+            editCellType={editCellType}
+            handleClickDeleteCellType={handleClickDeleteCellType}
+          />
 
-        <RuleCreator 
-          chosenRule={chosenRule}
-          activeRuleSet={activeRuleSet}
-          setActiveRuleSet={setActiveRuleSet}
-          handleClickDropdownElemRule={handleClickDropdownElemRule}
-          deleteChosenRule={deleteChosenRule}
-          setChosenRule={setChosenRule}
-          chosenPattern={chosenPattern}
-          setChosenPattern={setChosenPattern}
-        />
+          <RuleCreator 
+            chosenRule={chosenRule}
+            activeRuleSet={activeRuleSet}
+            setActiveRuleSet={setActiveRuleSet}
+            handleClickDropdownElemRule={handleClickDropdownElemRule}
+            deleteChosenRule={deleteChosenRule}
+            setChosenRule={setChosenRule}
+            chosenPattern={chosenPattern}
+            setChosenPattern={setChosenPattern}
+          />
+          </>
+        ) : (
+          <></>
+        )}
 
       </details>
 
