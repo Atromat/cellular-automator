@@ -15,6 +15,7 @@ function RuleEditor() {
   const [rowCount, setRowCount] = useState(80);
   const [columnCount, setColumnCount] = useState(120);
   const [chosenPattern, setChosenPattern] = useState(undefined);
+  const [displayMode, setDisplayMode] = useState("justShow")
 
   function stopOrStartSimulation(event) {
     setIsSimulationStopped(!isSimulationStopped);
@@ -126,6 +127,28 @@ function RuleEditor() {
               <div className='DropdownElement' onClick={(e) => handleClickDropdownElemRuleset(e, rule30Ruleset)}>Rule 30</div>
             </div>
           </div>
+
+          {displayMode !== "justShow" ? (
+            <>
+              <button className='EditorButton' onClick={(e) => handleClickSaveRuleset(e)}>Save</button>
+              <button className='EditorButton' onClick={(e) => handleClickCancelRuleset(e)}>Cancel</button>
+            </>
+          ) : (
+            <>
+            <button className='EditorButton' onClick={(e) => handleClickAddRuleset(e)}>Add</button>
+
+            {activeRuleSet ? (
+              <>
+              <button className='EditorButton' onClick={(e) => handleClickEditRuleset(e)}>Edit</button>
+              <button className='EditorButton' onClick={(e) => handleClickDeleteRuleset(e)}>Delete</button>
+              </>
+            ) : (
+              <></>
+            )}
+            
+            </>
+          )}
+
         </summary>
 
         <CellTypeEditorContainer 
