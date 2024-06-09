@@ -1,4 +1,5 @@
 const gameOfLifeRuleset = {
+  id: 0,
   ruleSetName: 'Game Of Life',
   cellTypes: [
     {
@@ -121,6 +122,7 @@ const gameOfLifeRuleset = {
 }
 
 const rule30Ruleset = {
+  id: 1,
   ruleSetName: 'Rule 30',
   cellTypes: [
     {
