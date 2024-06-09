@@ -33,7 +33,6 @@ function RuleEditor() {
   function handleClickDropdownElemRule(event, rule) {
     event.preventDefault();
     setChosenRule(rule);
-    setRuleCreatorDisplayMode("justShow");
     setChosenPattern(undefined);
   }
 
