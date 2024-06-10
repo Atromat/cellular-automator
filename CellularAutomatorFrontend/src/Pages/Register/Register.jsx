@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-function Register() {
+function Register({apiURL, setSignedInUser}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -17,7 +17,7 @@ function Register() {
     event.preventDefault();
 
     try {
-      const res = await axios.post('/auth/register', {
+      const res = await axios.post(apiURL + '/auth/register', {
           email,
           password
       });

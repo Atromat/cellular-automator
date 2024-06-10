@@ -11,12 +11,19 @@ import Layout from './Pages/Layout';
 
 function App() {
   const [count, setCount] = useState(0);
+  const [signedInUser, setSignedInUser] = useState(undefined);
+
   const apiURL = "http://localhost:8080/api";
+
+  const handleLogout = () => {
+    localStorage.removeItem('userToken');
+    setSignedInUser(undefined);
+  };
 
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Layout apiURL={apiURL} />,
+      element: <Layout apiURL={apiURL} signedInUser={signedInUser} handleLogout={handleLogout} />,
       errorElement: <ErrorPage />,
       children: [
         {
@@ -29,11 +36,11 @@ function App() {
         },
         {
           path: "/SignIn",
-          element: <SignIn apiURL={apiURL} />,
+          element: <SignIn apiURL={apiURL} setSignedInUser={setSignedInUser} />,
         },
         {
           path: "/Register",
-          element: <Register apiURL={apiURL} />,
+          element: <Register apiURL={apiURL} setSignedInUser={setSignedInUser} />,
         }
       ],
     },
