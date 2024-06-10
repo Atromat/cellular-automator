@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import axios from 'axios';
 
 function Register({apiURL, setSignedInUser}) {
   const [email, setEmail] = useState('');
@@ -23,6 +24,7 @@ function Register({apiURL, setSignedInUser}) {
       });
       setMessage('Registered successfully'); // Set success message
     } catch (err) {
+      console.log(err)
         console.error(err.response.data);
         setMessage('Failed to register, User already exists'); // Set error message
     }
