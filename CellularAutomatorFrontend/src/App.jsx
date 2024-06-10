@@ -10,12 +10,13 @@ import ErrorPage from './Pages/ErrorPage';
 import Layout from './Pages/Layout';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  const apiURL = "http://localhost:8080/api";
 
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Layout />,
+      element: <Layout apiURL={apiURL} />,
       errorElement: <ErrorPage />,
       children: [
         {
@@ -24,15 +25,15 @@ function App() {
         },
         {
           path: "/RuleEditor",
-          element: <RuleEditor />,
+          element: <RuleEditor apiURL={apiURL} />,
         },
         {
           path: "/SignIn",
-          element: <SignIn />,
+          element: <SignIn apiURL={apiURL} />,
         },
         {
           path: "/Register",
-          element: <Register />,
+          element: <Register apiURL={apiURL} />,
         }
       ],
     },
