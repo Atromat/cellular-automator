@@ -10,7 +10,6 @@ import ErrorPage from './Pages/ErrorPage';
 import Layout from './Pages/Layout';
 
 function App() {
-  const [count, setCount] = useState(0);
   const [signedInUser, setSignedInUser] = useState(undefined);
 
   const apiURL = "http://localhost:8080/api";
