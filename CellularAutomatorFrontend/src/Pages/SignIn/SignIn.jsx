@@ -27,7 +27,7 @@ function SignIn({apiURL, setSignedInUser}) {
       setMessage('Signed in successfully');
     } catch (err) {
         console.error(err.response.data);
-        setMessage('Failed to register, User already exists');
+        setMessage('Failed to sign in - wrong credentials');
     }
   }
 
