@@ -39,7 +39,7 @@ const rule = new mongoose.Schema({
         type: Number, 
         required: true
     },
-    patterns: [],
+    patterns: [pattern],
     cellBecomes: {
         type: Number, 
         required: true
