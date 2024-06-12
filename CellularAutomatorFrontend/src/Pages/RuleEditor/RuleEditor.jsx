@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import CellularAutomatonSimCanvas from '../../Components';
 import './RuleEditor.css';
-import { gameOfLifeRuleset, rule30Ruleset } from '../../SimulationLogic/PremadeRulesets';
+import { gameOfLifeRuleset, rule30Ruleset } from '../../SimulationLogic/PremadeRuleSets';
 import CellTypeEditorContainer from '../../Components/CellTypeEditorContainer/CellTypeEditorContainer';
 import RuleCreator from '../../Components/RuleCreator';
 

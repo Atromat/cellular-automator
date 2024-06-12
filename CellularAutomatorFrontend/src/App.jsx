@@ -10,12 +10,19 @@ import ErrorPage from './Pages/ErrorPage';
 import Layout from './Pages/Layout';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [signedInUser, setSignedInUser] = useState(undefined);
+
+  const apiURL = "http://localhost:8080/api";
+
+  const handleLogout = () => {
+    localStorage.removeItem('userToken');
+    setSignedInUser(undefined);
+  };
 
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Layout />,
+      element: <Layout apiURL={apiURL} signedInUser={signedInUser} handleLogout={handleLogout} />,
       errorElement: <ErrorPage />,
       children: [
         {
@@ -24,15 +31,15 @@ function App() {
         },
         {
           path: "/RuleEditor",
-          element: <RuleEditor />,
+          element: <RuleEditor apiURL={apiURL} />,
         },
         {
           path: "/SignIn",
-          element: <SignIn />,
+          element: <SignIn apiURL={apiURL} setSignedInUser={setSignedInUser} />,
         },
         {
           path: "/Register",
-          element: <Register />,
+          element: <Register apiURL={apiURL} setSignedInUser={setSignedInUser} />,
         }
       ],
     },

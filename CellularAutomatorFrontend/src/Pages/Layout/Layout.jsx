@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import './Layout.css';
 
-function Layout() {
+function Layout({signedInUser, handleLogout}) {
   const [responsiveToggled, setResponsiveToggled] = useState(false);
 
   function addActivePageToClassNameIfLocationEqual(location, originalClassName) {
@@ -14,8 +14,14 @@ function Layout() {
       <nav className={ responsiveToggled ? 'Topnav Responsive' : 'Topnav' }>
         <Link to="/" className={addActivePageToClassNameIfLocationEqual('/', 'NavbarLink')}>Cellular Automator</Link>
         <Link to="/RuleEditor" className={addActivePageToClassNameIfLocationEqual('/RuleEditor', 'NavbarLink')}>Rule Editor</Link>
-        <Link to="/SignIn" className={addActivePageToClassNameIfLocationEqual('/SignIn', 'NavbarLink')}>Sign In</Link>
-        <Link to="/Register" className={addActivePageToClassNameIfLocationEqual('/Register', 'NavbarLink')}>Register</Link>
+        {!signedInUser ? (
+          <>
+          <Link to="/SignIn" className={addActivePageToClassNameIfLocationEqual('/SignIn', 'NavbarLink')}>Sign In</Link>
+          <Link to="/Register" className={addActivePageToClassNameIfLocationEqual('/Register', 'NavbarLink')}>Register</Link>
+          </>
+        ) : (
+          <div className='SignOutDiv NavbarLink' onClick={(e) => handleLogout(e)} >Sign Out</div>
+        )}
         <div className="icon NavbarLink" onClick={(e) => setResponsiveToggled(!responsiveToggled)}>
           <i className="fa fa-bars"></i>
         </div>
