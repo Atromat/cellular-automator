@@ -7,7 +7,6 @@ const User = require('../models/User');
 
 const { JWT_SECRET } = process.env;
 
-// Register Route
 router.post('/register', async (req, res) => {
     const { email, password } = req.body;
 
@@ -42,20 +41,17 @@ router.post('/register', async (req, res) => {
 router.post('/signin', async (req, res) => {
     const { email, password } = req.body;
 
-    try {
-        // Check if the user exists
+    try {s
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ msg: 'Invalid credentials' });
         }
 
-        // Validate password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ msg: 'Invalid credentials' });
         }
-
-        // Generate JWT token
+        
         const payload = {
             user: {
                 id: user.id
