@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
+const rulesetRoutes = require('./routes/rulesetRoutes');
 
 const { MONGO_URL, PORT = 8080 } = process.env;
 
@@ -21,5 +22,6 @@ mongoose.connect(MONGO_URL)
     .catch(err => console.error(err));
 
 app.use('/api/auth', authRoutes);
+app.use('/api', rulesetRoutes);
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
