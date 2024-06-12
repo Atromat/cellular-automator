@@ -4,7 +4,28 @@ const router = express.Router();
 const User = require('../models/User');
 const checkAuth = require('../middleware/tokenAuth');
 
-const { JWT_SECRET } = process.env;
+router.get('/ruleset', checkAuth, async (req, res) => {
+  try {
+    const { rulesetId } = req.body;
+    const userId = req.userData.userId;
+    const user = await User.findById(userId);
+
+    if (user === null) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    const rulesetToGet = user.rulesets.id(rulesetId);
+
+    if (!rulesetToGet) {
+      return res.status(404).json({ msg: 'Ruleset not found' });
+    }
+
+    res.status(200).send(rulesetToGet);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 router.post('/ruleset', checkAuth, async (req, res) => {
   try {
@@ -54,6 +75,29 @@ router.patch('/ruleset', checkAuth, async (req, res) => {
     );
 
     res.status(200).send(userWithUpdatedRuleset.rulesets);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+router.delete('/ruleset', checkAuth, async (req, res) => {
+  try {
+    const { rulesetId } = req.body;
+    const userId = req.userData.userId;
+    const user = await User.findById(userId);
+  
+    if (user === null) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    await User.findByIdAndUpdate(userId, {
+      "$pull": {
+        "rulesets": { "_id": rulesetId}
+      }
+    })
+
+    res.status(200).send("Ruleset deleted successfully");
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
