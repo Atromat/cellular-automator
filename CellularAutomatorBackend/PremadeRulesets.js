@@ -254,4 +254,4 @@ const rule30Ruleset = {
   ]
 }
 
-export { gameOfLifeRuleset, rule30Ruleset };
+module.exports = { gameOfLifeRuleset, rule30Ruleset };
