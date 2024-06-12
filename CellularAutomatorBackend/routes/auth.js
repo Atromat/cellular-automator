@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const premadeRuleset = require('../PremadeRulesets');
+const checkAuth = require('../middleware/tokenAuth');
 
 const { JWT_SECRET } = process.env;
 
@@ -67,6 +68,18 @@ router.post('/signin', async (req, res) => {
             if (err) throw err;
             res.json({ token });
         });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+router.delete('/unregister', checkAuth, async (req, res) => {
+    try {
+        const userId = req.userData.userId;
+        console.log(userId)
+        await User.findByIdAndDelete(userId);
+        res.status(200).send('Successfully unregistered')
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
