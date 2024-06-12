@@ -4,6 +4,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const premadeRuleset = require('../PremadeRulesets');
 
 const { JWT_SECRET } = process.env;
 
@@ -20,6 +21,9 @@ router.post('/register', async (req, res) => {
 
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(password, salt);
+
+        user.rulesets.push(premadeRuleset.gameOfLifeRuleset);
+        user.rulesets.push(premadeRuleset.rule30Ruleset);
 
         await user.save();
 
