@@ -41,7 +41,7 @@ router.post('/register', async (req, res) => {
 router.post('/signin', async (req, res) => {
     const { email, password } = req.body;
 
-    try {s
+    try {
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ msg: 'Invalid credentials' });
@@ -51,7 +51,7 @@ router.post('/signin', async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ msg: 'Invalid credentials' });
         }
-        
+
         const payload = {
             user: {
                 id: user.id
