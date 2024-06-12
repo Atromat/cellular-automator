@@ -39,7 +39,7 @@ function App() {
         },
         {
           path: "/Register",
-          element: <Register apiURL={apiURL} setSignedInUser={setSignedInUser} />,
+          element: <Register apiURL={apiURL} />,
         }
       ],
     },
