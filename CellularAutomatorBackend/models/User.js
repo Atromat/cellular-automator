@@ -67,7 +67,8 @@ const ruleset = new mongoose.Schema({
         type: String, 
         required: true
     },
-    cellTypes: [cellType]
+    cellTypes: [cellType],
+    rules: [rule]
 })
 
 const UserSchema = new mongoose.Schema({
