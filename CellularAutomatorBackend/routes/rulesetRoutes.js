@@ -4,6 +4,22 @@ const router = express.Router();
 const User = require('../models/User');
 const checkAuth = require('../middleware/tokenAuth');
 
+router.get('/allrulesets', checkAuth, async (req, res) => {
+  try {
+    const userId = req.userData.userId;
+    const user = await User.findById(userId);
+
+    if (user === null) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    res.status(200).send(user.rulesets);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 router.get('/ruleset', checkAuth, async (req, res) => {
   try {
     const { rulesetId } = req.body;
