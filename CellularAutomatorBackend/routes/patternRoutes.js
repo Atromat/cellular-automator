@@ -63,7 +63,12 @@ router.delete('/pattern', checkAuth, async (req, res) => {
 
     const ruleset = user.rulesets.id(rulesetId);
     const rule = ruleset.rules.id(ruleId);
-    const patternIndex = rule.patterns.findIndex(p => p._id === pattern.id);
+    const patternIndex = rule.patterns.findIndex(p => p._id.toString() === pattern._id);
+
+    if (patternIndex < 0) {
+      return res.status(404).json({ msg: 'Pattern not found' });
+    }
+
     rule.patterns.splice(patternIndex, 1);
 
     await user.save();
