@@ -442,7 +442,7 @@ function RuleEditor({apiURL}) {
       />
       </>
       ) : (
-        <h1>Choose or create a ruleset with at least one rule</h1>
+        <h1>TODO describe what a valid ruleset is</h1>
       )}
 
     </div>
