@@ -175,17 +175,56 @@ function RuleEditor({apiURL}) {
     setDisplayMode("justShow");
   }
 
-  function handleClickSaveRuleset() {
+  async function fetchPostRuleset(ruleset) {
+    console.log(localStorage.getItem("userToken"))
+    try {
+      const res = await axios.post(apiURL + '/ruleset', 
+        {
+          ruleset: ruleset
+        },
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function fetchPatchRuleset(ruleset) {
+    console.log(localStorage.getItem("userToken"))
+    try {
+      const res = await axios.patch(apiURL + '/ruleset', 
+        {
+          ruleset: ruleset
+        },
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function handleClickSaveRuleset() {
     if (displayMode === "add") {
-      rulesets.push(activeRuleSet);
+      const res = await fetchPostRuleset(activeRuleSet);
+      setRulesets(res.data.rulesets);
+      setActiveRuleSet(res.data.rule);
     }
 
     if (displayMode === "edit") {
-      const rulesetIndex = rulesets.findIndex(ruleset => ruleset.id === activeRuleSet.id);
-      rulesets.splice(rulesetIndex, 1, activeRuleSet);
+      const res = await fetchPatchRuleset(activeRuleSet);
+      setRulesets(res.data);
     }
     
-    setRulesets({...rulesets});
     setDisplayMode("justShow");
   }
 
@@ -248,7 +287,7 @@ function RuleEditor({apiURL}) {
               {rulesets && rulesets.length > 0 ? (
                 <div className="dropdown-content">
                   {rulesets.map(ruleset => 
-                    <div key={ruleset.id + ruleset.ruleSetName} className='DropdownElement' onClick={(e) => handleClickDropdownElemRuleset(e, ruleset)}>{ruleset.ruleSetName}</div>
+                    <div key={ruleset._id} className='DropdownElement' onClick={(e) => handleClickDropdownElemRuleset(e, ruleset)}>{ruleset.ruleSetName}</div>
                   )}
                 </div>
               ) : (
