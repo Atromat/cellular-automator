@@ -80,6 +80,11 @@ router.delete('/cellType', checkAuth, async (req, res) => {
 
     const ruleset = user.rulesets.id(rulesetId);
     const cellTypeIndex = ruleset.cellTypes.findIndex(ct => ct.id === cellType.id);
+    
+    if (cellTypeIndex < 0) {
+      return res.status(404).json({ msg: 'Cell type not found' });
+    }
+
     deleteRulesRelatedToCellType(ruleset, cellType);
     ruleset.cellTypes.splice(cellTypeIndex, 1);
     await user.save();
