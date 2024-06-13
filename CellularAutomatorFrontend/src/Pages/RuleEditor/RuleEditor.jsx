@@ -409,6 +409,8 @@ function RuleEditor({apiURL}) {
             setChosenRule={setChosenRule}
             chosenPattern={chosenPattern}
             setChosenPattern={setChosenPattern}
+            setRulesets={setRulesets}
+            apiURL={apiURL}
           />
           </>
         ) : (

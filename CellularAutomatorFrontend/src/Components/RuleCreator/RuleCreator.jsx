@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import CellTypeDropdownMenu from "../CellTypeDropdownMenu";
 import PatternEditor from "../PatternEditor";
 import "./RuleCreator.css";
+import axios from "axios";
 
 function RuleCreator({
   chosenRule, 
@@ -13,7 +14,9 @@ function RuleCreator({
   deleteChosenRule, 
   setChosenRule,
   chosenPattern,
-  setChosenPattern
+  setChosenPattern,
+  setRulesets,
+  apiURL
 }) {
   const [patternEditorDisplayMode, setPatternEditorDisplayMode] = useState("justShow");
   const [displayMode, setDisplayMode] = useState("justShow")
@@ -46,10 +49,10 @@ function RuleCreator({
     setChosenPattern(undefined);
   }
 
+  //#region Rule Add, Edit, Delete, Save, Cancel
   function handleClickAddRule(event) {
     resetStatesToNotChosenRule();
     setChosenRule({
-      id: activeRuleSet.rules.reduce((maxRuleId, rule) => Math.max(maxRuleId, rule.id), 0) + 1,
       ruleName: '',
       effectsCellType: 0,
       patterns: [],
@@ -76,17 +79,60 @@ function RuleCreator({
     resetStatesToNotChosenRule();
   }
 
-  function handleClickSaveRule(event) {
+  async function fetchPostRule(ruleset, rule) {
+    try {
+      const res = await axios.post(apiURL + '/rule', 
+        {
+          rulesetId: ruleset._id,
+          rule: rule
+        },
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function fetchPatchRule(ruleset, rule) {
+    try {
+      const res = await axios.patch(apiURL + '/rule', 
+        {
+          rulesetId: ruleset._id,
+          rule: rule
+        },
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function handleClickSaveRule(event) {
     if (displayMode === "add") {
-      activeRuleSet.rules.push(chosenRule);
+      console.log(chosenRule)
+      const res = await fetchPostRule(activeRuleSet, chosenRule);
+      setChosenRule(res.data.rule);
+      setActiveRuleSet(res.data.ruleset);
+      setRulesets(res.data.rulesets);
     }
 
     if (displayMode === "edit") {
-      const ruleIndex = activeRuleSet.rules.findIndex(rule => rule.id === chosenRule.id);
-      activeRuleSet.rules.splice(ruleIndex, 1, chosenRule);
+      const res = await fetchPatchRule(activeRuleSet, chosenRule);
+      setChosenRule(res.data.rule);
+      setActiveRuleSet(res.data.ruleset);
+      setRulesets(res.data.rulesets);
     }
     
-    setActiveRuleSet({...activeRuleSet});
     setDisplayMode("justShow");
   }
 
@@ -94,6 +140,8 @@ function RuleCreator({
     setDisplayMode("justShow");
     resetStatesToNotChosenRule();
   }
+
+  //#endregion
 
   function getPatternEditor() {
     if (displayMode === "justShow") {
