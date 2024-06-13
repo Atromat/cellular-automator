@@ -79,7 +79,7 @@ router.delete('/unregister', checkAuth, async (req, res) => {
         const userId = req.userData.userId;
         console.log(userId)
         await User.findByIdAndDelete(userId);
-        res.status(200).send('Successfully unregistered')
+        res.status(200).send({msg: 'Successfully unregistered'})
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
