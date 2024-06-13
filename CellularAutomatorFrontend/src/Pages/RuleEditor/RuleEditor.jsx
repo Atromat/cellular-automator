@@ -50,7 +50,9 @@ function RuleEditor({apiURL}) {
   function handleClickDropdownElemRuleset(event, ruleset) {
     event.preventDefault();
     setActiveRuleSet(ruleset);
+    setChosenRule(undefined);
     setChosenCellType(undefined);
+    setChosenPattern(undefined)
   }
 
   function handleClickDropdownElemRule(event, rule) {
