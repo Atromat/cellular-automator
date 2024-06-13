@@ -63,7 +63,7 @@ router.post('/ruleset', checkAuth, async (req, res) => {
 
     user.rulesets.push(ruleset);
     await user.save();
-    res.status(200).send(user.rulesets);
+    res.status(200).send({rulesets: user.rulesets, rule: user.rulesets[user.rulesets.length - 1]});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
