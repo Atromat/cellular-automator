@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CellularAutomatonSimCanvas from '../../Components';
 import './RuleEditor.css';
-import { gameOfLifeRuleset, rule30Ruleset } from '../../SimulationLogic/PremadeRuleSets';
 import CellTypeEditorContainer from '../../Components/CellTypeEditorContainer/CellTypeEditorContainer';
 import RuleCreator from '../../Components/RuleCreator';
+import axios from 'axios';
 
-function RuleEditor() {
+function RuleEditor({apiURL}) {
   const [isSimulationStopped, setIsSimulationStopped] = useState(true);
   const [activeRuleSet, setActiveRuleSet] = useState(undefined);
   const [chosenRule, setChosenRule] = useState(undefined);
@@ -16,7 +16,28 @@ function RuleEditor() {
   const [columnCount, setColumnCount] = useState(120);
   const [chosenPattern, setChosenPattern] = useState(undefined);
   const [displayMode, setDisplayMode] = useState("justShow")
-  const [rulesets, setRulesets] = useState([gameOfLifeRuleset, rule30Ruleset]);
+  const [rulesets, setRulesets] = useState(undefined);
+
+  async function fetchRulesets() {
+    try {
+      const res = await axios.get(apiURL + '/allrulesets', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  
+  useEffect(() => {
+    if (localStorage.getItem("userToken")) {
+      fetchRulesets()
+        .then(res => setRulesets(res.data));
+    }
+  }, [])
 
   function stopOrStartSimulation(event) {
     setIsSimulationStopped(!isSimulationStopped);
