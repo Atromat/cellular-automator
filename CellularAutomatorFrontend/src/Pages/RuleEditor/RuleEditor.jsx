@@ -283,7 +283,7 @@ function RuleEditor({apiURL}) {
     if (displayMode === "add") {
       const res = await fetchPostRuleset(activeRuleSet);
       setRulesets(res.data.rulesets);
-      setActiveRuleSet(res.data.rule);
+      setActiveRuleSet(res.data.ruleset);
     }
 
     if (displayMode === "edit") {
