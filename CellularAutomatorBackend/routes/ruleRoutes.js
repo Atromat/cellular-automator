@@ -17,14 +17,13 @@ router.post('/rule', checkAuth, async (req, res) => {
     const ruleset = user.rulesets.id(rulesetId);
 
     if (!(ruleset.cellTypes.some(ct => ct.id === rule.effectsCellType) && ruleset.cellTypes.some(ct => ct.id === rule.cellBecomes))) {
-      res.status(400).send({ msg: "Error adding rule: a rule should not refer to cell types that are not part of the ruleset" });
-    } else {
-      ruleset.rules.push(rule);
-
-      await user.save();
-      res.status(200).send({ rulesets: user.rulesets, ruleset: ruleset, rule: ruleset.rules[ruleset.rules.length - 1] });
+      return res.status(400).send({ msg: "Error adding rule: a rule should not refer to cell types that are not part of the ruleset" });
     }
 
+    ruleset.rules.push(rule);
+
+    await user.save();
+    res.status(200).send({ rulesets: user.rulesets, ruleset: ruleset, rule: ruleset.rules[ruleset.rules.length - 1] });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -44,18 +43,17 @@ router.patch('/rule', checkAuth, async (req, res) => {
     const ruleset = user.rulesets.id(rulesetId);
 
     if (!(ruleset.cellTypes.some(ct => ct.id === rule.effectsCellType) && ruleset.cellTypes.some(ct => ct.id === rule.cellBecomes))) {
-      res.status(400).send({ msg: "Error updating rule: a rule should not refer to cell types that are not part of the ruleset" });
-    } else {
-      const ruleToUpdate = ruleset.rules.id(rule._id);
+      return res.status(400).send({ msg: "Error updating rule: a rule should not refer to cell types that are not part of the ruleset" });
+    }
+    
+    const ruleToUpdate = ruleset.rules.id(rule._id);
 
-      for (const key in rule) {
-        ruleToUpdate[key] = rule[key];
-      }
-
-      await user.save();
-      res.status(200).send({ rulesets: user.rulesets, ruleset: ruleset, rule: ruleToUpdate });
+    for (const key in rule) {
+      ruleToUpdate[key] = rule[key];
     }
 
+    await user.save();
+    res.status(200).send({ rulesets: user.rulesets, ruleset: ruleset, rule: ruleToUpdate });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
