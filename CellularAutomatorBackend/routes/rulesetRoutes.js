@@ -75,17 +75,17 @@ router.patch('/ruleset', checkAuth, async (req, res) => {
     const { ruleset } = req.body;
     const userId = req.userData.userId;
     const user = await User.findById(userId);
-  
+
     if (user === null) {
       return res.status(404).json({ msg: 'User not found' });
     }
 
     const userWithUpdatedRuleset = await User.findOneAndUpdate(
       { "_id": userId, "rulesets._id": ruleset._id },
-      { 
-          "$set": {
-              "rulesets.$": ruleset
-          }
+      {
+        "$set": {
+          "rulesets.$": ruleset
+        }
       },
       { new: true }
     );
@@ -102,14 +102,14 @@ router.delete('/ruleset', checkAuth, async (req, res) => {
     const { rulesetId } = req.body;
     const userId = req.userData.userId;
     const user = await User.findById(userId);
-  
+
     if (user === null) {
       return res.status(404).json({ msg: 'User not found' });
     }
 
     await User.findByIdAndUpdate(userId, {
       "$pull": {
-        "rulesets": { "_id": rulesetId}
+        "rulesets": { "_id": rulesetId }
       }
     })
 
