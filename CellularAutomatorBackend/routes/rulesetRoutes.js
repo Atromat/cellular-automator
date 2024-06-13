@@ -107,13 +107,16 @@ router.delete('/ruleset', checkAuth, async (req, res) => {
       return res.status(404).json({ msg: 'User not found' });
     }
 
-    await User.findByIdAndUpdate(userId, {
-      "$pull": {
-        "rulesets": { "_id": rulesetId }
-      }
-    })
+    const userAfterDeletedRuleset = await User.findByIdAndUpdate(userId, 
+      {
+        "$pull": {
+          "rulesets": { "_id": rulesetId }
+        }
+      }, 
+      { new: true }
+    );
 
-    res.status(200).send("Ruleset deleted successfully");
+    res.status(200).send(userAfterDeletedRuleset.rulesets);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
