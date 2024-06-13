@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth');
 const rulesetRoutes = require('./routes/rulesetRoutes');
 const cellTypeRoutes = require('./routes/cellTypeRoutes');
 const patternRoutes = require('./routes/patternRoutes');
+const ruleRoutes = require('./routes/ruleRoutes');
 
 const { MONGO_URL, PORT = 8080 } = process.env;
 
@@ -27,5 +28,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api', rulesetRoutes);
 app.use('/api', cellTypeRoutes);
 app.use('/api', patternRoutes);
+app.use('/api', ruleRoutes);
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
