@@ -156,6 +156,8 @@ function RuleCreator({
             setChosenPattern={setChosenPattern}
             handleClickDropdownElemPattern={handleClickDropdownElemPattern}
             effectedCellType={getCellTypeFromId(chosenRule.effectsCellType)}
+            setRulesets={setRulesets}
+            apiURL={apiURL}
           />
         </div>
       )

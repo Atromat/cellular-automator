@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import CellTypeDropdownMenu from "../CellTypeDropdownMenu";
 import "./PatternEditor.css";
 import AreaEditorCanvas from "../AreaEditorCanvas";
+import axios from "axios";
 
 function PatternEditor({
   chosenRule,
@@ -10,7 +11,9 @@ function PatternEditor({
   setActiveRuleSet,
   chosenPattern,
   setChosenPattern,
-  handleClickDropdownElemPattern
+  handleClickDropdownElemPattern,
+  setRulesets,
+  apiURL
 }) {
   const [displayMode, setDisplayMode] = useState("justShow");
 
@@ -34,6 +37,8 @@ function PatternEditor({
     chosenPattern.name = event.target.value;
     setChosenPattern({...chosenPattern});
   }
+
+  //#region Pattern Add, Edit, Delete, Save, Cancel
 
   function handleClickAddPattern(event) {
     chosenPattern = {
@@ -62,18 +67,64 @@ function PatternEditor({
     setChosenPattern(undefined);
   }
 
-  function handleClickSavePattern(event) {
+  async function fetchPostPattern(ruleset, rule, pattern) {
+    try {
+      const res = await axios.post(apiURL + '/pattern', 
+        {
+          rulesetId: ruleset._id,
+          ruleId: rule._id,
+          pattern: pattern
+        },
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function fetchPatchPattern(ruleset, rule, pattern) {
+    try {
+      const res = await axios.patch(apiURL + '/pattern', 
+        {
+          rulesetId: ruleset._id,
+          ruleId: rule._id,
+          pattern: pattern
+        },
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function handleClickSavePattern(event) {
     if (displayMode === "add") {
-      chosenRule.patterns.push(chosenPattern);
+      const res = await fetchPostPattern(activeRuleSet, chosenRule, chosenPattern);
+      console.log(res.data)
+      setRulesets(res.data.rulesets);
+      setActiveRuleSet(res.data.ruleset);
+      setChosenRule(res.data.rule);
+      setChosenPattern(res.data.pattern);
     }
 
     if (displayMode === "edit") {
-      const patternIndex = chosenRule.patterns.findIndex(pattern => pattern.id === chosenPattern.id);
-      chosenRule.patterns.splice(patternIndex, 1, chosenPattern);
+      const res = await fetchPatchPattern(activeRuleSet, chosenRule, chosenPattern);
+      setRulesets(res.data.rulesets);
+      setActiveRuleSet(res.data.ruleset);
+      setChosenRule(res.data.rule);
+      setChosenPattern(res.data.pattern);
     }
 
-    setChosenRule({...chosenRule});
-    setActiveRuleSet({...activeRuleSet});
     setDisplayMode("justShow");
   }
 
@@ -84,6 +135,8 @@ function PatternEditor({
 
     setDisplayMode("justShow");
   }
+
+  //#endregion
 
   function getPatternDescription(pattern, ruleset) {
     const cellTypeToCheckName = getCellTypeName(pattern.cellTypeToCheck, ruleset);
@@ -217,7 +270,7 @@ function PatternEditor({
             <div className="PatternDropdownContent">
               {chosenRule.patterns.map((pattern) =>
                   <div 
-                  key={pattern.name} 
+                  key={pattern._id} 
                   className='PatternDropdownElement' 
                   onClick={(e) => handleClickDropdownElemPattern(e, pattern)}
                   >

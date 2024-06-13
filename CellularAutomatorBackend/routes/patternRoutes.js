@@ -19,7 +19,7 @@ router.post('/pattern', checkAuth, async (req, res) => {
     rule.patterns.push(pattern);
 
     await user.save();
-    res.status(200).send({ rulesets: user.rulesets, ruleset: ruleset, pattern: rule.patterns[rule.patterns.length - 1] });
+    res.status(200).send({ rulesets: user.rulesets, ruleset: ruleset, rule: rule, pattern: rule.patterns[rule.patterns.length - 1] });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -44,7 +44,7 @@ router.patch('/pattern', checkAuth, async (req, res) => {
     }
 
     await user.save();
-    res.status(200).send({ rulesets: user.rulesets, ruleset: ruleset, pattern: patternToUpdate });
+    res.status(200).send({ rulesets: user.rulesets, ruleset: ruleset, rule: rule, pattern: patternToUpdate });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
