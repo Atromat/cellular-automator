@@ -5,8 +5,11 @@ const User = require('../models/User');
 const checkAuth = require('../middleware/tokenAuth');
 
 router.post('/rule', checkAuth, async (req, res) => {
+  console.log("post rule")
   try {
     const { rulesetId, rule } = req.body;
+    
+    console.log(rule)
     const userId = req.userData.userId;
     const user = await User.findById(userId);
 
@@ -45,7 +48,7 @@ router.patch('/rule', checkAuth, async (req, res) => {
     if (!(ruleset.cellTypes.some(ct => ct.id === rule.effectsCellType) && ruleset.cellTypes.some(ct => ct.id === rule.cellBecomes))) {
       return res.status(400).send({ msg: "Error updating rule: a rule should not refer to cell types that are not part of the ruleset" });
     }
-    
+
     const ruleToUpdate = ruleset.rules.id(rule._id);
 
     for (const key in rule) {
