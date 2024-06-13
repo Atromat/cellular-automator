@@ -16,6 +16,7 @@ function App() {
   useEffect(() => {
     const userToken = localStorage.getItem('userToken');
     if (userToken) {
+      console.log("TRUE TOKEN")
       setIsUserSignedIn(true);
     }
   }, [])
