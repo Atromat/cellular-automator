@@ -12,7 +12,6 @@ function CellEditorModal({modalOpenFor, handleClickCloseModal, chosenCellType, h
       cellColor: cellColor
     }
 
-    console.log(newCellType);
     return newCellType;
   }
 
