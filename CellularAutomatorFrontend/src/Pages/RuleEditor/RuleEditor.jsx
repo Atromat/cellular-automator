@@ -168,10 +168,29 @@ function RuleEditor({apiURL}) {
     setDisplayMode("edit");
   }
 
-  function handleClickDeleteRuleset() {
+  async function fetchDeleteRuleset(ruleset) {
+    console.log(ruleset._id)
+    console.log(localStorage.getItem("userToken"))
+    try {
+      const res = await axios.delete(apiURL + '/ruleset', 
+        {
+          rulesetId: ruleset._id
+        },
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function handleClickDeleteRuleset() {
     resetChosen();
-    const rulesetToDelIndex = rulesets.findIndex(r => r.id === activeRuleSet.id);
-    rulesets.splice(rulesetToDelIndex, 1);
+    await fetchDeleteRuleset(activeRuleSet);
     setDisplayMode("justShow");
   }
 
