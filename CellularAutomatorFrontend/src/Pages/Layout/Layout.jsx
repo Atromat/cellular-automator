@@ -19,7 +19,7 @@ function Layout({isUserSignedIn, setIsUserSignedIn}) {
   return (
     <div className="Layout">
       <nav className={ responsiveToggled ? 'Topnav Responsive' : 'Topnav' }>
-        <Link to="/" className={addActivePageToClassNameIfLocationEqual('/', 'NavbarLink')}>Cellular Automator</Link>
+        <Link to="/" className={addActivePageToClassNameIfLocationEqual('/', 'NavbarLink') + " FirstColumnWidth"} style={{paddingLeft: "0px", paddingRight: "0px" }}>Cellular Automator</Link>
         
         {!isUserSignedIn ? (
           <>
