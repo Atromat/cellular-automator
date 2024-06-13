@@ -149,7 +149,6 @@ function RuleEditor({apiURL}) {
     setChosenRule(undefined);
     setChosenPattern(undefined);
     setActiveRuleSet({
-      id: rulesets.reduce((maxRulesetId, ruleset) => Math.max(maxRulesetId, ruleset.id), 0) + 1,
       ruleSetName: "",
       cellTypes: [
         {
