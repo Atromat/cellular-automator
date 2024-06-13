@@ -327,6 +327,10 @@ function RuleEditor({apiURL}) {
         return false;
       }
 
+      if (rule.patterns.length < 1) {
+        return false;
+      }
+
       for (const pattern of rule.patterns) {
         if (!pattern.coordsRelativeToCell) {
           return false;
