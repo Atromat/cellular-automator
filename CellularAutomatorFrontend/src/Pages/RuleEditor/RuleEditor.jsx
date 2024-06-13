@@ -79,7 +79,6 @@ function RuleEditor({apiURL}) {
   //#region Cell type Add, Edit, Delete, Save, Cancel
 
   async function fetchPostCellType(ruleset, cellType) {
-    console.log(localStorage.getItem("userToken"))
     try {
       const res = await axios.post(apiURL + '/cellType', 
         {
@@ -111,7 +110,6 @@ function RuleEditor({apiURL}) {
   }
 
   async function fetchPatchCellType(ruleset, cellType) {
-    console.log(localStorage.getItem("userToken"))
     try {
       const res = await axios.patch(apiURL + '/cellType', 
         {
@@ -245,7 +243,6 @@ function RuleEditor({apiURL}) {
   }
 
   async function fetchPostRuleset(ruleset) {
-    console.log(localStorage.getItem("userToken"))
     try {
       const res = await axios.post(apiURL + '/ruleset', 
         {
@@ -264,7 +261,6 @@ function RuleEditor({apiURL}) {
   }
 
   async function fetchPatchRuleset(ruleset) {
-    console.log(localStorage.getItem("userToken"))
     try {
       const res = await axios.patch(apiURL + '/ruleset', 
         {
