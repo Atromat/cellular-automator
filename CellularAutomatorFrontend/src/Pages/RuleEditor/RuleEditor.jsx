@@ -190,6 +190,7 @@ function RuleEditor({apiURL}) {
     setActiveRuleSet(undefined);
     setChosenRule(undefined);
     setChosenPattern(undefined);
+    setChosenCellType(undefined);
   }
 
   //#region Ruleset Add, Edit, Delete, Save, Cancel
