@@ -220,14 +220,10 @@ function RuleEditor({apiURL}) {
   }
 
   async function fetchDeleteRuleset(ruleset) {
-    console.log(ruleset._id)
-    console.log(localStorage.getItem("userToken"))
     try {
       const res = await axios.delete(apiURL + '/ruleset', 
         {
-          rulesetId: ruleset._id
-        },
-        {
+          data: { rulesetId: ruleset._id },
           headers: {
             "Authorization": `Bearer ${localStorage.getItem("userToken")}`
           }
@@ -241,7 +237,8 @@ function RuleEditor({apiURL}) {
 
   async function handleClickDeleteRuleset() {
     resetChosen();
-    await fetchDeleteRuleset(activeRuleSet);
+    const res = await fetchDeleteRuleset(activeRuleSet);
+    setRulesets(res.data);
     setDisplayMode("justShow");
   }
 
