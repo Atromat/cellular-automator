@@ -71,26 +71,74 @@ function RuleEditor({apiURL}) {
     cellType.cellColor = event.target.value;
   }
 
+  
   function handleClickDropdownElemCellType(event, cellType) {
     setChosenCellType(cellType);
   }
 
-  function addCellType(cellType) {
+  //#region Cell type Add, Edit, Delete, Save, Cancel
+
+  async function fetchPostCellType(ruleset, cellType) {
+    console.log(localStorage.getItem("userToken"))
+    try {
+      const res = await axios.post(apiURL + '/cellType', 
+        {
+          rulesetId: ruleset._id,
+          cellType: cellType
+        },
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function addCellType(cellType) {
     const newCellType = {
-      id: activeRuleSet.cellTypes.reduce((maxCellTypeID, cellType) => Math.max(maxCellTypeID, cellType.id), 0) + 1,
       cellType: cellType.cellType,
       cellColor: cellType.cellColor
     }
 
-    activeRuleSet.cellTypes.push(newCellType);
-    setActiveRuleSet({...activeRuleSet});
+    const res = await fetchPostCellType(activeRuleSet, newCellType);
+    setRulesets(res.data.rulesets);
+    setActiveRuleSet(res.data.ruleset);
+    setChosenCellType(res.data.cellType);
   }
 
-  function editCellType(cellType) {
+  async function fetchPatchCellType(ruleset, cellType) {
+    console.log(localStorage.getItem("userToken"))
+    try {
+      const res = await axios.patch(apiURL + '/cellType', 
+        {
+          rulesetId: ruleset._id,
+          cellType: cellType
+        },
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function editCellType(cellType) {
     const cellTypeToEdit = activeRuleSet.cellTypes.find(cellT => cellT.id === cellType.id);
     cellTypeToEdit.cellColor = cellType.cellColor;
     cellTypeToEdit.cellType = cellType.cellType;
-    setActiveRuleSet({...activeRuleSet});
+
+    const res = await fetchPatchCellType(activeRuleSet, cellTypeToEdit);
+    setRulesets(res.data.rulesets);
+    setActiveRuleSet(res.data.ruleset);
+    setChosenCellType(res.data.cellType);
   }
 
   function deleteCellType(cellType) {
@@ -130,6 +178,8 @@ function RuleEditor({apiURL}) {
   function handleClickDeleteCellType(event) {
     deleteCellType(chosenCellType);
   }
+
+  //#endregion
 
   function deleteChosenRule() {
     const ruleToDelIndex = activeRuleSet.rules.findIndex(r => r.id === chosenRule.id);
