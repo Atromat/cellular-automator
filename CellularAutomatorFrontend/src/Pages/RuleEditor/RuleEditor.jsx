@@ -144,7 +144,7 @@ function RuleEditor({apiURL}) {
     setChosenPattern(undefined);
   }
 
-  //#region Add, Edit, Delete, Save, Cancel
+  //#region Ruleset Add, Edit, Delete, Save, Cancel
   function handleClickAddRuleset() {
     setChosenRule(undefined);
     setChosenPattern(undefined);
