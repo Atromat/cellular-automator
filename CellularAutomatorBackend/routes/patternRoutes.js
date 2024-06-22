@@ -72,7 +72,7 @@ router.delete('/pattern', checkAuth, async (req, res) => {
     rule.patterns.splice(patternIndex, 1);
 
     await user.save();
-    res.status(200).send({ rulesets: user.rulesets, ruleset: ruleset });
+    res.status(200).send({ rulesets: user.rulesets, ruleset: ruleset, rule: rule });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

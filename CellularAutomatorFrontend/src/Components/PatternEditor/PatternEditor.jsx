@@ -61,9 +61,27 @@ function PatternEditor({
     setDisplayMode("edit");
   }
 
-  function handleClickDeletePattern(event) {
-    const patternIndex = chosenRule.patterns.findIndex(pattern => pattern.name === chosenPattern.name);
-    chosenRule.patterns.splice(patternIndex, 1);
+  async function fetchDeletePattern(ruleset, rule, pattern) {
+    try {
+      const res = await axios.delete(apiURL + '/pattern', 
+        {
+          data: { rulesetId: ruleset._id, ruleId: rule, pattern: pattern },
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function handleClickDeletePattern(event) {
+    const res = await fetchDeletePattern(activeRuleSet, chosenRule, chosenPattern);
+    setRulesets(res.rulesets);
+    setActiveRuleSet(res.ruleset);
+    setChosenRule(res.rule);
     setChosenPattern(undefined);
   }
 
