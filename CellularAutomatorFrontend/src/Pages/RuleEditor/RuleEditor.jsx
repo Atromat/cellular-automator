@@ -181,13 +181,6 @@ function RuleEditor({apiURL}) {
 
   //#endregion
 
-  function deleteChosenRule() {
-    const ruleToDelIndex = activeRuleSet.rules.findIndex(r => r.id === chosenRule.id);
-    activeRuleSet.rules.splice(ruleToDelIndex, 1);
-    setChosenRule(undefined);
-    setActiveRuleSet({...activeRuleSet});
-  }
-
   function resetChosen() {
     setActiveRuleSet(undefined);
     setChosenRule(undefined);
@@ -404,7 +397,6 @@ function RuleEditor({apiURL}) {
             activeRuleSet={activeRuleSet}
             setActiveRuleSet={setActiveRuleSet}
             handleClickDropdownElemRule={handleClickDropdownElemRule}
-            deleteChosenRule={deleteChosenRule}
             setChosenRule={setChosenRule}
             chosenPattern={chosenPattern}
             setChosenPattern={setChosenPattern}

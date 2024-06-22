@@ -11,7 +11,6 @@ function RuleCreator({
   activeRuleSet,
   setActiveRuleSet,
   handleClickDropdownElemRule, 
-  deleteChosenRule, 
   setChosenRule,
   chosenPattern,
   setChosenPattern,
@@ -72,9 +71,26 @@ function RuleCreator({
     setDisplayMode("edit");
   }
 
-  function handleClickDeleteRule(event) {
-    // TODO look at it again for potential problems
-    deleteChosenRule();
+  async function fetchDeleteRule(ruleset, rule) {
+    try {
+      const res = await axios.delete(apiURL + '/rule', 
+        {
+          data: { rulesetId: ruleset._id, rule: rule },
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function handleClickDeleteRule(event) {
+    const res = await fetchDeleteRule(activeRuleSet, chosenRule);
+    setActiveRuleSet(res.ruleset);
+    setRulesets(res.rulesets);
     setDisplayMode("justShow");
     resetStatesToNotChosenRule();
   }
