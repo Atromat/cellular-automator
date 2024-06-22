@@ -4,6 +4,8 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const premadeRuleset = require('../PremadeRulesets');
+const checkAuth = require('../middleware/tokenAuth');
 
 const { JWT_SECRET } = process.env;
 
@@ -20,6 +22,9 @@ router.post('/register', async (req, res) => {
 
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(password, salt);
+
+        user.rulesets.push(premadeRuleset.gameOfLifeRuleset);
+        user.rulesets.push(premadeRuleset.rule30Ruleset);
 
         await user.save();
 
@@ -41,7 +46,7 @@ router.post('/register', async (req, res) => {
 router.post('/signin', async (req, res) => {
     const { email, password } = req.body;
 
-    try {s
+    try {
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ msg: 'Invalid credentials' });
@@ -51,7 +56,7 @@ router.post('/signin', async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ msg: 'Invalid credentials' });
         }
-        
+
         const payload = {
             user: {
                 id: user.id
@@ -63,6 +68,18 @@ router.post('/signin', async (req, res) => {
             if (err) throw err;
             res.json({ token });
         });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+router.delete('/unregister', checkAuth, async (req, res) => {
+    try {
+        const userId = req.userData.userId;
+        console.log(userId)
+        await User.findByIdAndDelete(userId);
+        res.status(200).send({msg: 'Successfully unregistered'})
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');

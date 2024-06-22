@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CellularAutomatonSimCanvas from '../../Components';
 import './RuleEditor.css';
-import { gameOfLifeRuleset, rule30Ruleset } from '../../SimulationLogic/PremadeRuleSets';
 import CellTypeEditorContainer from '../../Components/CellTypeEditorContainer/CellTypeEditorContainer';
 import RuleCreator from '../../Components/RuleCreator';
+import axios from 'axios';
 
-function RuleEditor() {
+function RuleEditor({apiURL}) {
   const [isSimulationStopped, setIsSimulationStopped] = useState(true);
   const [activeRuleSet, setActiveRuleSet] = useState(undefined);
   const [chosenRule, setChosenRule] = useState(undefined);
@@ -16,7 +16,28 @@ function RuleEditor() {
   const [columnCount, setColumnCount] = useState(120);
   const [chosenPattern, setChosenPattern] = useState(undefined);
   const [displayMode, setDisplayMode] = useState("justShow")
-  const [rulesets, setRulesets] = useState([gameOfLifeRuleset, rule30Ruleset]);
+  const [rulesets, setRulesets] = useState(undefined);
+
+  async function fetchRulesets() {
+    try {
+      const res = await axios.get(apiURL + '/allrulesets', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  
+  useEffect(() => {
+    if (localStorage.getItem("userToken")) {
+      fetchRulesets()
+        .then(res => setRulesets(res.data));
+    }
+  }, [])
 
   function stopOrStartSimulation(event) {
     setIsSimulationStopped(!isSimulationStopped);
@@ -29,7 +50,9 @@ function RuleEditor() {
   function handleClickDropdownElemRuleset(event, ruleset) {
     event.preventDefault();
     setActiveRuleSet(ruleset);
+    setChosenRule(undefined);
     setChosenCellType(undefined);
+    setChosenPattern(undefined)
   }
 
   function handleClickDropdownElemRule(event, rule) {
@@ -50,26 +73,72 @@ function RuleEditor() {
     cellType.cellColor = event.target.value;
   }
 
+  
   function handleClickDropdownElemCellType(event, cellType) {
     setChosenCellType(cellType);
   }
 
-  function addCellType(cellType) {
+  //#region Cell type Add, Edit, Delete, Save, Cancel
+
+  async function fetchPostCellType(ruleset, cellType) {
+    try {
+      const res = await axios.post(apiURL + '/cellType', 
+        {
+          rulesetId: ruleset._id,
+          cellType: cellType
+        },
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function addCellType(cellType) {
     const newCellType = {
-      id: activeRuleSet.cellTypes.reduce((maxCellTypeID, cellType) => Math.max(maxCellTypeID, cellType.id), 0) + 1,
       cellType: cellType.cellType,
       cellColor: cellType.cellColor
     }
 
-    activeRuleSet.cellTypes.push(newCellType);
-    setActiveRuleSet({...activeRuleSet});
+    const res = await fetchPostCellType(activeRuleSet, newCellType);
+    setRulesets(res.data.rulesets);
+    setActiveRuleSet(res.data.ruleset);
+    setChosenCellType(res.data.cellType);
   }
 
-  function editCellType(cellType) {
+  async function fetchPatchCellType(ruleset, cellType) {
+    try {
+      const res = await axios.patch(apiURL + '/cellType', 
+        {
+          rulesetId: ruleset._id,
+          cellType: cellType
+        },
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function editCellType(cellType) {
     const cellTypeToEdit = activeRuleSet.cellTypes.find(cellT => cellT.id === cellType.id);
     cellTypeToEdit.cellColor = cellType.cellColor;
     cellTypeToEdit.cellType = cellType.cellType;
-    setActiveRuleSet({...activeRuleSet});
+
+    const res = await fetchPatchCellType(activeRuleSet, cellTypeToEdit);
+    setRulesets(res.data.rulesets);
+    setActiveRuleSet(res.data.ruleset);
+    setChosenCellType(res.data.cellType);
   }
 
   function deleteCellType(cellType) {
@@ -110,25 +179,20 @@ function RuleEditor() {
     deleteCellType(chosenCellType);
   }
 
-  function deleteChosenRule() {
-    const ruleToDelIndex = activeRuleSet.rules.findIndex(r => r.id === chosenRule.id);
-    activeRuleSet.rules.splice(ruleToDelIndex, 1);
-    setChosenRule(undefined);
-    setActiveRuleSet({...activeRuleSet});
-  }
+  //#endregion
 
   function resetChosen() {
     setActiveRuleSet(undefined);
     setChosenRule(undefined);
     setChosenPattern(undefined);
+    setChosenCellType(undefined);
   }
 
-  //#region Add, Edit, Delete, Save, Cancel
+  //#region Ruleset Add, Edit, Delete, Save, Cancel
   function handleClickAddRuleset() {
     setChosenRule(undefined);
     setChosenPattern(undefined);
     setActiveRuleSet({
-      id: rulesets.reduce((maxRulesetId, ruleset) => Math.max(maxRulesetId, ruleset.id), 0) + 1,
       ruleSetName: "",
       cellTypes: [
         {
@@ -148,24 +212,77 @@ function RuleEditor() {
     setDisplayMode("edit");
   }
 
-  function handleClickDeleteRuleset() {
+  async function fetchDeleteRuleset(ruleset) {
+    try {
+      const res = await axios.delete(apiURL + '/ruleset', 
+        {
+          data: { rulesetId: ruleset._id },
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function handleClickDeleteRuleset() {
     resetChosen();
-    const rulesetToDelIndex = rulesets.findIndex(r => r.id === activeRuleSet.id);
-    rulesets.splice(rulesetToDelIndex, 1);
+    const res = await fetchDeleteRuleset(activeRuleSet);
+    setRulesets(res.data);
     setDisplayMode("justShow");
   }
 
-  function handleClickSaveRuleset() {
+  async function fetchPostRuleset(ruleset) {
+    try {
+      const res = await axios.post(apiURL + '/ruleset', 
+        {
+          ruleset: ruleset
+        },
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function fetchPatchRuleset(ruleset) {
+    try {
+      const res = await axios.patch(apiURL + '/ruleset', 
+        {
+          ruleset: ruleset
+        },
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function handleClickSaveRuleset() {
     if (displayMode === "add") {
-      rulesets.push(activeRuleSet);
+      const res = await fetchPostRuleset(activeRuleSet);
+      setRulesets(res.data.rulesets);
+      setActiveRuleSet(res.data.ruleset);
     }
 
     if (displayMode === "edit") {
-      const rulesetIndex = rulesets.findIndex(ruleset => ruleset.id === activeRuleSet.id);
-      rulesets.splice(rulesetIndex, 1, activeRuleSet);
+      const res = await fetchPatchRuleset(activeRuleSet);
+      setRulesets(res.data);
     }
     
-    setRulesets({...rulesets});
     setDisplayMode("justShow");
   }
 
@@ -202,6 +319,10 @@ function RuleEditor() {
         return false;
       }
 
+      if (rule.patterns.length < 1) {
+        return false;
+      }
+
       for (const pattern of rule.patterns) {
         if (!pattern.coordsRelativeToCell) {
           return false;
@@ -228,7 +349,7 @@ function RuleEditor() {
               {rulesets && rulesets.length > 0 ? (
                 <div className="dropdown-content">
                   {rulesets.map(ruleset => 
-                    <div key={ruleset.id + ruleset.ruleSetName} className='DropdownElement' onClick={(e) => handleClickDropdownElemRuleset(e, ruleset)}>{ruleset.ruleSetName}</div>
+                    <div key={ruleset._id} className='DropdownElement' onClick={(e) => handleClickDropdownElemRuleset(e, ruleset)}>{ruleset.ruleSetName}</div>
                   )}
                 </div>
               ) : (
@@ -276,10 +397,11 @@ function RuleEditor() {
             activeRuleSet={activeRuleSet}
             setActiveRuleSet={setActiveRuleSet}
             handleClickDropdownElemRule={handleClickDropdownElemRule}
-            deleteChosenRule={deleteChosenRule}
             setChosenRule={setChosenRule}
             chosenPattern={chosenPattern}
             setChosenPattern={setChosenPattern}
+            setRulesets={setRulesets}
+            apiURL={apiURL}
           />
           </>
         ) : (
@@ -313,7 +435,7 @@ function RuleEditor() {
       />
       </>
       ) : (
-        <h1>Choose or create a ruleset with at least one rule</h1>
+        <h1>TODO describe what a valid ruleset is</h1>
       )}
 
     </div>

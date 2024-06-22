@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -10,19 +10,20 @@ import ErrorPage from './Pages/ErrorPage';
 import Layout from './Pages/Layout';
 
 function App() {
-  const [signedInUser, setSignedInUser] = useState(undefined);
-
+  const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const apiURL = "http://localhost:8080/api";
 
-  const handleLogout = () => {
-    localStorage.removeItem('userToken');
-    setSignedInUser(undefined);
-  };
-
+  useEffect(() => {
+    const userToken = localStorage.getItem('userToken');
+    if (userToken) {
+      setIsUserSignedIn(true);
+    }
+  }, [])
+  
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Layout apiURL={apiURL} signedInUser={signedInUser} handleLogout={handleLogout} />,
+      element: <Layout apiURL={apiURL} isUserSignedIn={isUserSignedIn} setIsUserSignedIn={setIsUserSignedIn} />,
       errorElement: <ErrorPage />,
       children: [
         {
@@ -35,11 +36,11 @@ function App() {
         },
         {
           path: "/SignIn",
-          element: <SignIn apiURL={apiURL} setSignedInUser={setSignedInUser} />,
+          element: <SignIn apiURL={apiURL} setIsUserSignedIn={setIsUserSignedIn} />,
         },
         {
           path: "/Register",
-          element: <Register apiURL={apiURL} setSignedInUser={setSignedInUser} />,
+          element: <Register apiURL={apiURL} />,
         }
       ],
     },

@@ -42,8 +42,6 @@ function AreaEditorCanvas({activeRuleSet, chosenRule, chosenPattern, setChosenPa
     config.chosenPattern = chosenPattern;
     setMapForRuleAndPattern(chosenRule.effectsCellType, chosenPattern);
     draw(getCanvasContext());
-    console.log("Area-ban chosenPattern useEffect")
-    console.log(chosenPattern)
   }, [chosenPattern])
 
   function getCanvasContext() {

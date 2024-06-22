@@ -50,7 +50,8 @@ const cellType = new mongoose.Schema({
     _id: false,
     id: {
         type: Number, 
-        required: true
+        required: true,
+        unique: true
     },
     cellType: {
         type: String,

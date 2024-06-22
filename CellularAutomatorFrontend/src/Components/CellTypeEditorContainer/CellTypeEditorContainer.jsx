@@ -18,14 +18,14 @@ function CellTypeEditorContainer({ chosenCellType, cellTypes, handleClickDropdow
     setModalOpenFor("notOpen");
   }
 
-  function handleSave(event, cellType) {
+  async function handleSave(event, cellType) {
     event.preventDefault();
     switch (modalOpenFor) {
       case "adding":
-        addCellType(cellType);
+        await addCellType(cellType);
         break;
       case "editing":
-        editCellType(cellType);
+        await editCellType(cellType);
         break;
     }
   }

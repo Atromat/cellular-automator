@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-function SignIn({apiURL, setSignedInUser}) {
+function SignIn({apiURL, setIsUserSignedIn}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -23,7 +23,7 @@ function SignIn({apiURL, setSignedInUser}) {
           password
       });
       localStorage.setItem('userToken', res.data.token);
-      setSignedInUser(email);
+      setIsUserSignedIn(true);
       setMessage('Signed in successfully');
     } catch (err) {
         console.error(err.response.data);
