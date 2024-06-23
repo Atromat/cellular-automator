@@ -8,10 +8,11 @@ import SignIn from './Pages/SignIn';
 import Register from './Pages/Register';
 import ErrorPage from './Pages/ErrorPage';
 import Layout from './Pages/Layout';
+import { API_URL } from './api';
 
 function App() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
-  const apiURL = "http://localhost:8080/api";
+  const apiURL = API_URL;
 
   useEffect(() => {
     const userToken = localStorage.getItem('userToken');
