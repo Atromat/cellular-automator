@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react';
 
 import App from '../src/App';
 
-describe('App', () => {
-  it('renders App component when user not signed in', () => {
+describe('App component', () => {
+  it('renders Cellular Automator (home page), Sign In and Register navbar links', () => {
     render(<App />);
 
     expect(screen.getByText('Cellular Automator')).toBeInTheDocument();
