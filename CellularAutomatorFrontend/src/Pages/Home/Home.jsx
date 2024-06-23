@@ -2,7 +2,7 @@ import React from 'react'
 
 function Home() {
   return (
-    <div>Cellular Automator</div>
+    <div>TODO home page which also explains how to use the site</div>
   )
 }
 
