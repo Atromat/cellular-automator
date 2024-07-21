@@ -1,0 +1,59 @@
+# Services
+services:
+  # Server service
+  server:
+    build:
+      context: ./CellularAutomatorBackend
+      dockerfile: Dockerfile
+    container_name: CellularAutomatorBackend
+    ports:
+      - "8080:8080"
+    env_file: .env
+    environment:
+      - DB_HOST=mongodb
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=${DB_PORT}
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - mongodb
+    networks:
+      - mynetwork
+
+  # Client service
+  client:
+    build:
+      context: ./CellularAutomatorFrontend
+      dockerfile: Dockerfile
+
+    container_name: CellularAutomatorFrontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - server
+    networks:
+      - mynetwork
+
+  # Database service
+  mongodb:
+    image: mongo:latest
+    container_name: mongo
+    restart: always
+
+    ports:
+      - "27017:27017"
+
+    #volumes:
+      #- ./mydata:/data/db
+      #- ./mongodb-init.js:/docker-entrypoint-initdb.d/mongodb-init.js:ro
+
+    env_file: .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:

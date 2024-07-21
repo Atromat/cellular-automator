@@ -8,7 +8,12 @@ const cellTypeRoutes = require('./routes/cellTypeRoutes');
 const patternRoutes = require('./routes/patternRoutes');
 const ruleRoutes = require('./routes/ruleRoutes');
 
-const { MONGO_URL, PORT = 8080 } = process.env;
+let MONGO_URL = process.env.MONGO_URL;
+const { PORT = 8080, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME } = process.env;
+
+if (DB_USER && DB_PASSWORD && DB_HOST && DB_PORT && DB_NAME) {
+  MONGO_URL = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=admin`;
+}
 
 if (!MONGO_URL) {
   console.error("Missing MONGO_URL environment variable");
@@ -21,8 +26,8 @@ app.use(express.json());
 app.use(cors());
 
 mongoose.connect(MONGO_URL)
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.error(err));
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.error(err));
 
 app.use('/api/auth', authRoutes);
 app.use('/api', rulesetRoutes);
