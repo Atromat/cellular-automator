@@ -8,11 +8,18 @@ services:
     container_name: CellularAutomatorBackend
     ports:
       - "8080:8080"
-    env_file: ./CellularAutomatorBackend/.env
-    #environment:
-    #  - MONGO_URL=$MONGO_URL
-    #depends_on:
-    #  - mongodb
+    env_file: .env
+    environment:
+      - DB_HOST=mongodb
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=${DB_PORT}
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - mongodb
+    networks:
+      - mynetwork
 
   # Client service
   client:
@@ -25,23 +32,28 @@ services:
       - "5173:5173"
     depends_on:
       - server
+    networks:
+      - mynetwork
 
   # Database service
-#  mongodb:
-#    image: mongo:latest
-#    container_name: mongodb_server
+  mongodb:
+    image: mongo:latest
+    container_name: mongo
+    restart: always
 
-#    env_file: ./.env
-#    environment:
-#      - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
-#      - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
+    ports:
+      - "27017:27017"
 
-#    ports:
-#      - "27017:27017"
+    #volumes:
+      #- ./mydata:/data/db
+      #- ./mongodb-init.js:/docker-entrypoint-initdb.d/mongodb-init.js:ro
 
-#    volumes:
-#      - ./../mydata:/data/db
+    env_file: .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}
+    networks:
+      - mynetwork
 
-# Volumes define
-#volumes: 
-#  mydata:
+networks:
+  mynetwork:
